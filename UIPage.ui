@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>802</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>370</y>
+      <width>561</width>
+      <height>181</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QLabel" name="label1">
+       <property name="font">
+        <font>
+         <pointsize>16</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>users list</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QListWidget" name="listWidget">
+       <item>
+        <property name="text">
+         <string>user1</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>user2</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>user3</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton1">
+       <property name="font">
+        <font>
+         <pointsize>14</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>select all users</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="gridLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>-1</x>
+      <y>-1</y>
+      <width>801</width>
+      <height>224</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="0" column="4">
+      <widget class="QPushButton" name="lock">
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton{
+	border: 1px solid rgb(0, 255, 127);
+	border-radius: 20px;
+	background-color: rgb(213, 255, 213);
+}
+QPushButton:hover{
+	border: 1px solid rgb(0, 255, 127);
+	border-radius: 20px;
+	background-color: rgb(0, 170, 0);
+}
+
+QPushButton:pressed{
+	border: 10px solid rgb(0, 255, 127);
+	border-radius: 20px;
+	background-color: rgb(0, 170, 0);
+}
+</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="res/imgs.qrc">
+         <normaloff>:/newPrefix/lock.png</normaloff>:/newPrefix/lock.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>100</width>
+         <height>100</height>
+        </size>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QPushButton" name="turnStudentPCOn">
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton{
+	border: 1px solid rgb(0, 255, 127);
+	border-radius: 20px;
+	background-color: rgb(213, 255, 213);
+}
+QPushButton:hover{
+	border: 1px solid rgb(0, 255, 127);
+	border-radius: 20px;
+	background-color: rgb(0, 170, 0);
+}
+
+QPushButton:pressed{
+	border: 10px solid rgb(0, 255, 127);
+	border-radius: 20px;
+	background-color: rgb(0, 170, 0);
+}
+</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="res/imgs.qrc">
+         <normaloff>:/newPrefix/switch-on.png</normaloff>:/newPrefix/switch-on.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>100</width>
+         <height>100</height>
+        </size>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QPushButton" name="watchStudentScreen">
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton{
+	border: 1px solid rgb(0, 255, 127);
+	border-radius: 20px;
+	background-color: rgb(213, 255, 213);
+}
+QPushButton:hover{
+	border: 1px solid rgb(0, 255, 127);
+	border-radius: 20px;
+	background-color: rgb(0, 170, 0);
+}
+
+QPushButton:pressed{
+	border: 10px solid rgb(0, 255, 127);
+	border-radius: 20px;
+	background-color: rgb(0, 170, 0);
+}
+</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="res/imgs.qrc">
+         <normaloff>:/newPrefix/watch screen.png</normaloff>:/newPrefix/watch screen.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>100</width>
+         <height>100</height>
+        </size>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QPushButton" name="turnOffStudentPC">
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton{
+	border: 1px solid rgb(0, 255, 127);
+	border-radius: 20px;
+	background-color: rgb(213, 255, 213);
+}
+QPushButton:hover{
+	border: 1px solid rgb(0, 255, 127);
+	border-radius: 20px;
+	background-color: rgb(0, 170, 0);
+}
+
+QPushButton:pressed{
+	border: 10px solid rgb(0, 255, 127);
+	border-radius: 20px;
+	background-color: rgb(0, 170, 0);
+}
+</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="res/imgs.qrc">
+         <normaloff>:/newPrefix/switch-off.png</normaloff>:/newPrefix/switch-off.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>100</width>
+         <height>100</height>
+        </size>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QPushButton" name="stopShareScreen">
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton{
+	border: 1px solid rgb(0, 255, 127);
+	border-radius: 20px;
+	background-color: rgb(213, 255, 213);
+}
+QPushButton:hover{
+	border: 1px solid rgb(0, 255, 127);
+	border-radius: 20px;
+	background-color: rgb(0, 170, 0);
+}
+
+QPushButton:pressed{
+	border: 10px solid rgb(0, 255, 127);
+	border-radius: 20px;
+	background-color: rgb(0, 170, 0);
+}
+</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="res/imgs.qrc">
+         <normaloff>:/newPrefix/stop share screen.png</normaloff>:/newPrefix/stop share screen.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>100</width>
+         <height>100</height>
+        </size>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>10</width>
+         <height>10</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="0" column="3">
+      <widget class="QPushButton" name="startShareScreen">
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton{
+	border: 1px solid rgb(0, 255, 127);
+	border-radius: 20px;
+	background-color: rgb(213, 255, 213);
+}
+QPushButton:hover{
+	border: 1px solid rgb(0, 255, 127);
+	border-radius: 20px;
+	background-color: rgb(0, 170, 0);
+}
+
+QPushButton:pressed{
+	border: 10px solid rgb(0, 255, 127);
+	border-radius: 20px;
+	background-color: rgb(0, 170, 0);
+}
+</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="res/imgs.qrc">
+         <normaloff>:/newPrefix/share screen.png</normaloff>:/newPrefix/share screen.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>100</width>
+         <height>100</height>
+        </size>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="4">
+      <widget class="QPushButton" name="unlock">
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton{
+	border: 1px solid rgb(0, 255, 127);
+	border-radius: 20px;
+	background-color: rgb(213, 255, 213);
+}
+QPushButton:hover{
+	border: 1px solid rgb(0, 255, 127);
+	border-radius: 20px;
+	background-color: rgb(0, 170, 0);
+}
+
+QPushButton:pressed{
+	border: 10px solid rgb(0, 255, 127);
+	border-radius: 20px;
+	background-color: rgb(0, 170, 0);
+}
+</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="res/imgs.qrc">
+         <normaloff>:/newPrefix/unlock.png</normaloff>:/newPrefix/unlock.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>100</width>
+         <height>100</height>
+        </size>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QPushButton" name="sendFile">
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton{
+	border: 1px solid rgb(0, 255, 127);
+	border-radius: 20px;
+	background-color: rgb(213, 255, 213);
+}
+QPushButton:hover{
+	border: 1px solid rgb(0, 255, 127);
+	border-radius: 20px;
+	background-color: rgb(0, 170, 0);
+}
+
+QPushButton:pressed{
+	border: 10px solid rgb(0, 255, 127);
+	border-radius: 20px;
+	background-color: rgb(0, 170, 0);
+}
+</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>res/send-file.png</normaloff>res/send-file.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>100</width>
+         <height>100</height>
+        </size>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>10</width>
+         <height>10</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="1" column="5">
+      <spacer name="horizontalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>17</width>
+         <height>17</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="0" column="5">
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>10</width>
+         <height>10</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>802</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources>
+  <include location="res/imgs.qrc"/>
+ </resources>
+ <connections/>
+</ui>
