@@ -1,0 +1,6 @@
+
+converting the uiFile.ui to uiFile.py
+pyuic5 uiFile.ui -o uiFile.py   
+
+converting the img.qrc to imgs_rc.py
+pyrcc5 res/imgs/imgs.qrc -o imgs_rc.py 

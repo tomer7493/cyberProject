@@ -111,7 +111,7 @@ QPushButton:pressed{
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="res/imgs.qrc">
+        <iconset resource="res/imgs/imgs.qrc">
          <normaloff>:/newPrefix/lock.png</normaloff>:/newPrefix/lock.png</iconset>
        </property>
        <property name="iconSize">
@@ -153,7 +153,7 @@ QPushButton:pressed{
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="res/imgs.qrc">
+        <iconset resource="res/imgs/imgs.qrc">
          <normaloff>:/newPrefix/switch-on.png</normaloff>:/newPrefix/switch-on.png</iconset>
        </property>
        <property name="iconSize">
@@ -195,7 +195,7 @@ QPushButton:pressed{
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="res/imgs.qrc">
+        <iconset resource="res/imgs/imgs.qrc">
          <normaloff>:/newPrefix/watch screen.png</normaloff>:/newPrefix/watch screen.png</iconset>
        </property>
        <property name="iconSize">
@@ -237,7 +237,7 @@ QPushButton:pressed{
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="res/imgs.qrc">
+        <iconset resource="res/imgs/imgs.qrc">
          <normaloff>:/newPrefix/switch-off.png</normaloff>:/newPrefix/switch-off.png</iconset>
        </property>
        <property name="iconSize">
@@ -279,7 +279,7 @@ QPushButton:pressed{
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="res/imgs.qrc">
+        <iconset resource="res/imgs/imgs.qrc">
          <normaloff>:/newPrefix/stop share screen.png</normaloff>:/newPrefix/stop share screen.png</iconset>
        </property>
        <property name="iconSize">
@@ -337,7 +337,7 @@ QPushButton:pressed{
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="res/imgs.qrc">
+        <iconset resource="res/imgs/imgs.qrc">
          <normaloff>:/newPrefix/share screen.png</normaloff>:/newPrefix/share screen.png</iconset>
        </property>
        <property name="iconSize">
@@ -379,7 +379,7 @@ QPushButton:pressed{
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="res/imgs.qrc">
+        <iconset resource="res/imgs/imgs.qrc">
          <normaloff>:/newPrefix/unlock.png</normaloff>:/newPrefix/unlock.png</iconset>
        </property>
        <property name="iconSize">
@@ -421,8 +421,8 @@ QPushButton:pressed{
         <string/>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>res/send-file.png</normaloff>res/send-file.png</iconset>
+        <iconset resource="res/imgs/imgs.qrc">
+         <normaloff>:/newPrefix/send-file.png</normaloff>:/newPrefix/send-file.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -492,7 +492,7 @@ QPushButton:pressed{
      <x>0</x>
      <y>0</y>
      <width>802</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>
@@ -500,6 +500,7 @@ QPushButton:pressed{
  </widget>
  <resources>
   <include location="res/imgs.qrc"/>
+  <include location="res/imgs/imgs.qrc"/>
  </resources>
  <connections/>
 </ui>
