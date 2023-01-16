@@ -10,6 +10,9 @@ import sys
 app = PyQt5.QtWidgets.QApplication(sys.argv)
 ex = uiFile.Ui_MainWindow()
 w = PyQt5.QtWidgets.QMainWindow()
+
+
+
 ex.setupUi(w)
 w.show()
 sys.exit(app.exec())

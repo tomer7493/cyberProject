@@ -39,7 +39,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QListWidget" name="listWidget">
+      <widget class="QListWidget" name="usersList">
        <item>
         <property name="text">
          <string>user1</string>
@@ -58,7 +58,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton1">
+      <widget class="QPushButton" name="selectAllUsers">
        <property name="font">
         <font>
          <pointsize>14</pointsize>
