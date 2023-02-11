@@ -3,7 +3,7 @@ import sqlite3
 
 
 class users_db:
-    def __init__(self, path, tablename="Users_Table", col_client_name="client_name", col_ip_addr="ip_addr", col_mac_addr="mac_addr"):
+    def __init__(self, path="\\", tablename="Users_Table", col_client_name="client_name", col_ip_addr="ip_addr", col_mac_addr="mac_addr"):
         self.path = path
         self.tablename = tablename
         self.col_client_name = col_client_name

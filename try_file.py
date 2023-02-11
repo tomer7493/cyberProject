@@ -1,11 +1,15 @@
 
-with open(r"C:\Users\User\Downloads\12.png", "rb") as f:
-    text = f.read()
-    #print(text)
-temp = "lol".encode()+text
-print(temp[:3].decode())
-with open(r"C:\Users\User\Downloads\new2.png", "wb") as f:
-    f.write(temp[3:])
+# with open(r"C:\Users\User\Downloads\12.png", "rb") as f:
+#     text = f.read()
+#     #print(text)
+# temp = "lol".encode()+text
+# print(temp[:3].decode())
+# with open(r"C:\Users\User\Downloads\new2.png", "wb") as f:
+#     f.write(temp[3:])
+
+import socket
+tmp = socket.gethostbyname(socket.gethostname())
+print((tmp))
 
 # import database as db
 # tmp = db.users_db("try.db")

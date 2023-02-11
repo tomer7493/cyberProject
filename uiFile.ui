@@ -40,6 +40,9 @@
      </item>
      <item>
       <widget class="QListWidget" name="usersList">
+       <property name="selectionMode">
+        <enum>QAbstractItemView::ExtendedSelection</enum>
+       </property>
        <item>
         <property name="text">
          <string>user1</string>
