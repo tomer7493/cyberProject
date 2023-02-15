@@ -26,12 +26,56 @@ class users_db:
         except Exception as e:
             print(e)
             return False
-    
-    def get_user_by_ip(self,ip):
+
+    def get_specific_stat_from_all_users(self, mode: int):
+        '''
+        ---for name enter mode 1 
+        ---for mac  enter mode 2
+        ---for ip   enter mode 3 
+       '''
+
+        if (mode == 1):
+            info_col = self.col_client_name
+        elif (mode == 2):
+            info_col = self.col_mac_addr
+        elif (mode == 3):
+            info_col = self.col_ip_addr
+        else:
+            return []
+
         conn = sqlite3.connect(self.path)
         cursor = conn.execute(
-            f"SELECT * FROM {self.tablename} WHERE {self.col_ip_addr} = '{ip}'")
+            f"SELECT {info_col} FROM {self.tablename}")
         data = cursor.fetchall()
         conn.close()
-        return data[0]
-        
+        if (data == []):
+            return data
+        ret_list = []
+        for user in data:
+            ret_list.append(user[0])
+        return ret_list
+
+    def get_user_by_single_info(self, info: str, mode: int):
+        '''
+        ---for name enter mode 1 
+        ---for mac  enter mode 2
+        ---for ip   enter mode 3 
+       '''
+
+        if (mode == 1):
+            info_col = self.col_client_name
+        elif (mode == 2):
+            info_col = self.col_mac_addr
+        elif (mode == 3):
+            info_col = self.col_ip_addr
+        else:
+            return []
+
+        conn = sqlite3.connect(self.path)
+        cursor = conn.execute(
+            f"SELECT * FROM {self.tablename} WHERE {info_col} = '{info}'")
+        data = cursor.fetchall()
+        conn.close()
+        if (data == []):
+            return data
+        return data[0][1:]
