@@ -3,21 +3,22 @@ import sqlite3
 
 
 class users_db:
-    def __init__(self, path="\\", tablename="Users_Table", col_client_name="client_name", col_ip_addr="ip_addr", col_mac_addr="mac_addr"):
+    def __init__(self, path="\\", tablename="Users_Table", col_client_name="client_name", col_ip_addr="ip_addr", col_port_addr="port_addr", col_mac_addr="mac_addr"):
         self.path = path
         self.tablename = tablename
         self.col_client_name = col_client_name
         self.col_ip_addr = col_ip_addr
+        self.col_port_addr = col_port_addr
         self.col_mac_addr = col_mac_addr
         conn = sqlite3.connect(self.path)
         conn.execute(
-            f'CREATE TABLE IF NOT EXISTS {self.tablename} (id INTEGER PRIMARY KEY, {self.col_client_name} STRING,{self.col_mac_addr} STRING,{self.col_ip_addr} STRING )')
+            f'CREATE TABLE IF NOT EXISTS {self.tablename} (id INTEGER PRIMARY KEY, {self.col_client_name} STRING,{self.col_ip_addr} STRING,{self.col_port_addr} INTEGER,{self.col_mac_addr} STRING )')
         conn.commit()
         conn.close()
 
-    def add_client(self, client_name, ip_addr, mac_addr):
+    def add_client(self, client_name, ip_addr, port_addr, mac_addr):
         conn = sqlite3.connect(self.path)
-        str_insert = f"INSERT INTO {self.tablename} ({self.col_client_name},{self.col_ip_addr},{self.col_mac_addr}) VALUES ('{client_name}','{ip_addr}','{mac_addr}')"
+        str_insert = f"INSERT INTO {self.tablename} ({self.col_client_name},{self.col_ip_addr},{self.col_port_addr},{self.col_mac_addr}) VALUES ('{client_name}','{ip_addr}','{port_addr}','{mac_addr}')"
         try:
             conn.execute(str_insert)
             conn.commit()
@@ -31,7 +32,7 @@ class users_db:
         '''
         ---for name enter mode 1 
         ---for mac  enter mode 2
-        ---for ip   enter mode 3 
+        ---for ip + port  enter mode 3 
        '''
 
         if (mode == 1):
@@ -39,7 +40,7 @@ class users_db:
         elif (mode == 2):
             info_col = self.col_mac_addr
         elif (mode == 3):
-            info_col = self.col_ip_addr
+            info_col = f"{self.col_ip_addr},{self.col_port_addr}"
         else:
             return []
 
@@ -52,7 +53,11 @@ class users_db:
             return data
         ret_list = []
         for user in data:
-            ret_list.append(user[0])
+            if (mode == 3):
+                ret_list.append((user[0], user[1]))
+            else:
+                ret_list.append(user[0])
+
         return ret_list
 
     def get_user_by_single_info(self, info: str, mode: int):
@@ -78,4 +83,4 @@ class users_db:
         conn.close()
         if (data == []):
             return data
-        return data[0][1:]
+        return data[0]

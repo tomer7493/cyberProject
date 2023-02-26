@@ -49,21 +49,6 @@
        <property name="sortingEnabled">
         <bool>false</bool>
        </property>
-       <item>
-        <property name="text">
-         <string>user1</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>user2</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>user3</string>
-        </property>
-       </item>
       </widget>
      </item>
      <item>

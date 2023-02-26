@@ -10,6 +10,8 @@ import PyQt5.QtWidgets
 import sys
 import database
 import uiActions
+from vidstream import StreamingServer, ScreenShareClient
+
 
 IP = socket.gethostbyname(socket.gethostname())
 
@@ -27,6 +29,7 @@ class Server:
         self.unregistered_users_list = {}
         self.queue_for_client_dict = {}
         self.database = database.users_db("users_database.db")
+        self.connected_users = 0
 
         global shutdown
         shutdown = False
@@ -52,7 +55,7 @@ class Server:
 
         client_assignment_queue = queue.Queue()
         self.queue_for_client_dict.update(
-            {client_addr[0]: client_assignment_queue})
+            {client_addr: client_assignment_queue})
 
         recv_thread = threading.Thread(
             target=self.recv_from_client, args=(client_conn, client_addr))
@@ -61,19 +64,19 @@ class Server:
         send_to_client_thread = threading.Thread(
             target=self.send_to_client, args=(client_conn, client_addr, client_assignment_queue))
         send_to_client_thread.start()
+        self.connected_users+=1
 
     def handle_server_assignment(self):
         while (not shutdown):
-            cmd, data, users_ip = self.server_assignment_queue.get()
-            for user_ip in users_ip:
-                if (not user_ip == []):#????????????????
+            cmd, data, users_addr = self.server_assignment_queue.get()
+            for user_addr in users_addr:
+                if (not user_addr == []):  # ????????????????
                     current_user_queue = self.queue_for_client_dict.get(
-                        user_ip)
+                        user_addr)
                     current_user_queue.put((cmd, data))
             if (cmd == "close server"):
-                #time.sleep(10)
+                # time.sleep(10)
                 self.server_socket.close()
-                
 
     def recv_from_client(self, client_conn, client_address):
         while (not shutdown):
@@ -93,16 +96,18 @@ class Server:
             data = raw_data[1]
            # if (cmd=="signup"):
 
-            self.server_assignment_queue.put((cmd, data, (client_address[0],)))
+            self.server_assignment_queue.put((cmd, data, (client_address,)))
 
     def send_to_client(self, client_conn, client_addr, assignment_queue):
 
         # when the client first connecting to the server, the signup command will be send
         msg = self.protocol_msg_to_send("signup", "enter your name: ")
         client_conn.send(msg)
-
+        id =""
+        server = ""
+        inAction = False
         while (not shutdown):
-
+            msg = ""
             # # checks if the this client is the last one the should get the assignment
             # users_selected_list = assignment_queue.queue[0][2]
             # if (len(users_selected_list) == 1):
@@ -119,17 +124,35 @@ class Server:
 
             if (cmd == "close server"):
                 msg = self.protocol_msg_to_send("close client", "")
-                client_conn.send(msg)
-                break
-            elif (cmd == "startShareScreenMet"):
-                pass
-            elif (cmd == "stopShareScreenMet"):
-                pass
-            elif (cmd == "signup"):
-                self.database.add_client(data, client_addr[0], "TODO")
-                msg = self.protocol_msg_to_send(cmd, "registration successful")
-                client_conn.send(msg)
 
+                break
+
+            elif (cmd == "startShareScreenMet"):
+                server = ScreenShareClient(
+                    socket.gethostbyname(socket.gethostname()), 10000+id)
+                msg = self.protocol_msg_to_send("startShareScreenMet", str(10000+id))
+                inAction = True
+                server.start_stream()
+
+            elif (cmd == "stopShareScreenMet"):
+                msg = self.protocol_msg_to_send("stopShareScreenMet", "")
+                inAction = False
+                server.stop_stream()
+            # elif (cmd == "watchStudentScreenMet"):
+                
+            
+            elif (cmd == "signup"):
+                self.database.add_client(
+                    data, client_addr[0], client_addr[1], "TODO")
+                uiActions.add_user_to_list(data)
+                msg = self.protocol_msg_to_send(cmd, "registration successful")
+                id =  self.database.get_user_by_single_info(data,1)[0]
+            if (not msg == ""):
+                client_conn.send(msg)
+                
+    # def send_all (self,msg):
+    #     self.
+        
     def protocol_msg_to_send(self, cmd, data):
         return f"{cmd}@{data}".encode(FORMAT)
 

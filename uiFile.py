@@ -21,8 +21,7 @@ class Ui_MainWindow(object):
         self.verticalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
         self.verticalLayoutWidget.setGeometry(QtCore.QRect(230, 370, 561, 181))
         self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
-        self.verticalLayout_2 = QtWidgets.QVBoxLayout(
-            self.verticalLayoutWidget)
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.label1 = QtWidgets.QLabel(self.verticalLayoutWidget)
@@ -34,18 +33,9 @@ class Ui_MainWindow(object):
         self.label1.setObjectName("label1")
         self.verticalLayout_2.addWidget(self.label1)
         self.usersList = QtWidgets.QListWidget(self.verticalLayoutWidget)
-        self.usersList.setSelectionMode(
-            QtWidgets.QAbstractItemView.ExtendedSelection)
+        self.usersList.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
+        self.usersList.setLayoutMode(QtWidgets.QListView.SinglePass)
         self.usersList.setObjectName("usersList")
-        item = QtWidgets.QListWidgetItem()
-        self.usersList.addItem(item)
-        item = QtWidgets.QListWidgetItem()
-        self.usersList.addItem(item)
-        #item.
-        #item.isSelected
-        #self.usersList.items
-        item = QtWidgets.QListWidgetItem()
-        self.usersList.addItem(item)
         self.verticalLayout_2.addWidget(self.usersList)
         self.selectAllUsers = QtWidgets.QPushButton(self.verticalLayoutWidget)
         font = QtGui.QFont()
@@ -53,6 +43,7 @@ class Ui_MainWindow(object):
         font.setBold(True)
         font.setWeight(75)
         self.selectAllUsers.setFont(font)
+        self.selectAllUsers.setCheckable(False)
         self.selectAllUsers.setObjectName("selectAllUsers")
         self.verticalLayout_2.addWidget(self.selectAllUsers)
         self.gridLayoutWidget = QtWidgets.QWidget(self.centralwidget)
@@ -64,26 +55,25 @@ class Ui_MainWindow(object):
         self.lock = QtWidgets.QPushButton(self.gridLayoutWidget)
         self.lock.setAutoFillBackground(False)
         self.lock.setStyleSheet("QPushButton{\n"
-                                "    border: 1px solid rgb(0, 255, 127);\n"
-                                "    border-radius: 20px;\n"
-                                "    background-color: rgb(213, 255, 213);\n"
-                                "}\n"
-                                "QPushButton:hover{\n"
-                                "    border: 1px solid rgb(0, 255, 127);\n"
-                                "    border-radius: 20px;\n"
-                                "    background-color: rgb(0, 170, 0);\n"
-                                "}\n"
-                                "\n"
-                                "QPushButton:pressed{\n"
-                                "    border: 10px solid rgb(0, 255, 127);\n"
-                                "    border-radius: 20px;\n"
-                                "    background-color: rgb(0, 170, 0);\n"
-                                "}\n"
-                                "")
+"    border: 1px solid rgb(0, 255, 127);\n"
+"    border-radius: 20px;\n"
+"    background-color: rgb(213, 255, 213);\n"
+"}\n"
+"QPushButton:hover{\n"
+"    border: 1px solid rgb(0, 255, 127);\n"
+"    border-radius: 20px;\n"
+"    background-color: rgb(0, 170, 0);\n"
+"}\n"
+"\n"
+"QPushButton:pressed{\n"
+"    border: 10px solid rgb(0, 255, 127);\n"
+"    border-radius: 20px;\n"
+"    background-color: rgb(0, 170, 0);\n"
+"}\n"
+"")
         self.lock.setText("")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/newPrefix/lock.png"),
-                       QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/newPrefix/lock.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.lock.setIcon(icon)
         self.lock.setIconSize(QtCore.QSize(100, 100))
         self.lock.setFlat(True)
@@ -92,26 +82,25 @@ class Ui_MainWindow(object):
         self.turnStudentPCOn = QtWidgets.QPushButton(self.gridLayoutWidget)
         self.turnStudentPCOn.setAutoFillBackground(False)
         self.turnStudentPCOn.setStyleSheet("QPushButton{\n"
-                                           "    border: 1px solid rgb(0, 255, 127);\n"
-                                           "    border-radius: 20px;\n"
-                                           "    background-color: rgb(213, 255, 213);\n"
-                                           "}\n"
-                                           "QPushButton:hover{\n"
-                                           "    border: 1px solid rgb(0, 255, 127);\n"
-                                           "    border-radius: 20px;\n"
-                                           "    background-color: rgb(0, 170, 0);\n"
-                                           "}\n"
-                                           "\n"
-                                           "QPushButton:pressed{\n"
-                                           "    border: 10px solid rgb(0, 255, 127);\n"
-                                           "    border-radius: 20px;\n"
-                                           "    background-color: rgb(0, 170, 0);\n"
-                                           "}\n"
-                                           "")
+"    border: 1px solid rgb(0, 255, 127);\n"
+"    border-radius: 20px;\n"
+"    background-color: rgb(213, 255, 213);\n"
+"}\n"
+"QPushButton:hover{\n"
+"    border: 1px solid rgb(0, 255, 127);\n"
+"    border-radius: 20px;\n"
+"    background-color: rgb(0, 170, 0);\n"
+"}\n"
+"\n"
+"QPushButton:pressed{\n"
+"    border: 10px solid rgb(0, 255, 127);\n"
+"    border-radius: 20px;\n"
+"    background-color: rgb(0, 170, 0);\n"
+"}\n"
+"")
         self.turnStudentPCOn.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/newPrefix/switch-on.png"),
-                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/newPrefix/switch-on.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.turnStudentPCOn.setIcon(icon1)
         self.turnStudentPCOn.setIconSize(QtCore.QSize(100, 100))
         self.turnStudentPCOn.setFlat(True)
@@ -120,26 +109,25 @@ class Ui_MainWindow(object):
         self.watchStudentScreen = QtWidgets.QPushButton(self.gridLayoutWidget)
         self.watchStudentScreen.setAutoFillBackground(False)
         self.watchStudentScreen.setStyleSheet("QPushButton{\n"
-                                              "    border: 1px solid rgb(0, 255, 127);\n"
-                                              "    border-radius: 20px;\n"
-                                              "    background-color: rgb(213, 255, 213);\n"
-                                              "}\n"
-                                              "QPushButton:hover{\n"
-                                              "    border: 1px solid rgb(0, 255, 127);\n"
-                                              "    border-radius: 20px;\n"
-                                              "    background-color: rgb(0, 170, 0);\n"
-                                              "}\n"
-                                              "\n"
-                                              "QPushButton:pressed{\n"
-                                              "    border: 10px solid rgb(0, 255, 127);\n"
-                                              "    border-radius: 20px;\n"
-                                              "    background-color: rgb(0, 170, 0);\n"
-                                              "}\n"
-                                              "")
+"    border: 1px solid rgb(0, 255, 127);\n"
+"    border-radius: 20px;\n"
+"    background-color: rgb(213, 255, 213);\n"
+"}\n"
+"QPushButton:hover{\n"
+"    border: 1px solid rgb(0, 255, 127);\n"
+"    border-radius: 20px;\n"
+"    background-color: rgb(0, 170, 0);\n"
+"}\n"
+"\n"
+"QPushButton:pressed{\n"
+"    border: 10px solid rgb(0, 255, 127);\n"
+"    border-radius: 20px;\n"
+"    background-color: rgb(0, 170, 0);\n"
+"}\n"
+"")
         self.watchStudentScreen.setText("")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(":/newPrefix/watch screen.png"),
-                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(":/newPrefix/watch screen.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.watchStudentScreen.setIcon(icon2)
         self.watchStudentScreen.setIconSize(QtCore.QSize(100, 100))
         self.watchStudentScreen.setFlat(True)
@@ -148,26 +136,25 @@ class Ui_MainWindow(object):
         self.turnOffStudentPC = QtWidgets.QPushButton(self.gridLayoutWidget)
         self.turnOffStudentPC.setAutoFillBackground(False)
         self.turnOffStudentPC.setStyleSheet("QPushButton{\n"
-                                            "    border: 1px solid rgb(0, 255, 127);\n"
-                                            "    border-radius: 20px;\n"
-                                            "    background-color: rgb(213, 255, 213);\n"
-                                            "}\n"
-                                            "QPushButton:hover{\n"
-                                            "    border: 1px solid rgb(0, 255, 127);\n"
-                                            "    border-radius: 20px;\n"
-                                            "    background-color: rgb(0, 170, 0);\n"
-                                            "}\n"
-                                            "\n"
-                                            "QPushButton:pressed{\n"
-                                            "    border: 10px solid rgb(0, 255, 127);\n"
-                                            "    border-radius: 20px;\n"
-                                            "    background-color: rgb(0, 170, 0);\n"
-                                            "}\n"
-                                            "")
+"    border: 1px solid rgb(0, 255, 127);\n"
+"    border-radius: 20px;\n"
+"    background-color: rgb(213, 255, 213);\n"
+"}\n"
+"QPushButton:hover{\n"
+"    border: 1px solid rgb(0, 255, 127);\n"
+"    border-radius: 20px;\n"
+"    background-color: rgb(0, 170, 0);\n"
+"}\n"
+"\n"
+"QPushButton:pressed{\n"
+"    border: 10px solid rgb(0, 255, 127);\n"
+"    border-radius: 20px;\n"
+"    background-color: rgb(0, 170, 0);\n"
+"}\n"
+"")
         self.turnOffStudentPC.setText("")
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(":/newPrefix/switch-off.png"),
-                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap(":/newPrefix/switch-off.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.turnOffStudentPC.setIcon(icon3)
         self.turnOffStudentPC.setIconSize(QtCore.QSize(100, 100))
         self.turnOffStudentPC.setFlat(True)
@@ -176,57 +163,54 @@ class Ui_MainWindow(object):
         self.stopShareScreen = QtWidgets.QPushButton(self.gridLayoutWidget)
         self.stopShareScreen.setAutoFillBackground(False)
         self.stopShareScreen.setStyleSheet("QPushButton{\n"
-                                           "    border: 1px solid rgb(0, 255, 127);\n"
-                                           "    border-radius: 20px;\n"
-                                           "    background-color: rgb(213, 255, 213);\n"
-                                           "}\n"
-                                           "QPushButton:hover{\n"
-                                           "    border: 1px solid rgb(0, 255, 127);\n"
-                                           "    border-radius: 20px;\n"
-                                           "    background-color: rgb(0, 170, 0);\n"
-                                           "}\n"
-                                           "\n"
-                                           "QPushButton:pressed{\n"
-                                           "    border: 10px solid rgb(0, 255, 127);\n"
-                                           "    border-radius: 20px;\n"
-                                           "    background-color: rgb(0, 170, 0);\n"
-                                           "}\n"
-                                           "")
+"    border: 1px solid rgb(0, 255, 127);\n"
+"    border-radius: 20px;\n"
+"    background-color: rgb(213, 255, 213);\n"
+"}\n"
+"QPushButton:hover{\n"
+"    border: 1px solid rgb(0, 255, 127);\n"
+"    border-radius: 20px;\n"
+"    background-color: rgb(0, 170, 0);\n"
+"}\n"
+"\n"
+"QPushButton:pressed{\n"
+"    border: 10px solid rgb(0, 255, 127);\n"
+"    border-radius: 20px;\n"
+"    background-color: rgb(0, 170, 0);\n"
+"}\n"
+"")
         self.stopShareScreen.setText("")
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap(
-            ":/newPrefix/stop share screen.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon4.addPixmap(QtGui.QPixmap(":/newPrefix/stop share screen.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.stopShareScreen.setIcon(icon4)
         self.stopShareScreen.setIconSize(QtCore.QSize(100, 100))
         self.stopShareScreen.setFlat(True)
         self.stopShareScreen.setObjectName("stopShareScreen")
         self.gridLayout_2.addWidget(self.stopShareScreen, 1, 3, 1, 1)
-        spacerItem = QtWidgets.QSpacerItem(
-            10, 10, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
+        spacerItem = QtWidgets.QSpacerItem(10, 10, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.gridLayout_2.addItem(spacerItem, 0, 0, 1, 1)
         self.startShareScreen = QtWidgets.QPushButton(self.gridLayoutWidget)
         self.startShareScreen.setAutoFillBackground(False)
         self.startShareScreen.setStyleSheet("QPushButton{\n"
-                                            "    border: 1px solid rgb(0, 255, 127);\n"
-                                            "    border-radius: 20px;\n"
-                                            "    background-color: rgb(213, 255, 213);\n"
-                                            "}\n"
-                                            "QPushButton:hover{\n"
-                                            "    border: 1px solid rgb(0, 255, 127);\n"
-                                            "    border-radius: 20px;\n"
-                                            "    background-color: rgb(0, 170, 0);\n"
-                                            "}\n"
-                                            "\n"
-                                            "QPushButton:pressed{\n"
-                                            "    border: 10px solid rgb(0, 255, 127);\n"
-                                            "    border-radius: 20px;\n"
-                                            "    background-color: rgb(0, 170, 0);\n"
-                                            "}\n"
-                                            "")
+"    border: 1px solid rgb(0, 255, 127);\n"
+"    border-radius: 20px;\n"
+"    background-color: rgb(213, 255, 213);\n"
+"}\n"
+"QPushButton:hover{\n"
+"    border: 1px solid rgb(0, 255, 127);\n"
+"    border-radius: 20px;\n"
+"    background-color: rgb(0, 170, 0);\n"
+"}\n"
+"\n"
+"QPushButton:pressed{\n"
+"    border: 10px solid rgb(0, 255, 127);\n"
+"    border-radius: 20px;\n"
+"    background-color: rgb(0, 170, 0);\n"
+"}\n"
+"")
         self.startShareScreen.setText("")
         icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap(":/newPrefix/share screen.png"),
-                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon5.addPixmap(QtGui.QPixmap(":/newPrefix/share screen.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.startShareScreen.setIcon(icon5)
         self.startShareScreen.setIconSize(QtCore.QSize(100, 100))
         self.startShareScreen.setFlat(True)
@@ -235,26 +219,25 @@ class Ui_MainWindow(object):
         self.unlock = QtWidgets.QPushButton(self.gridLayoutWidget)
         self.unlock.setAutoFillBackground(False)
         self.unlock.setStyleSheet("QPushButton{\n"
-                                  "    border: 1px solid rgb(0, 255, 127);\n"
-                                  "    border-radius: 20px;\n"
-                                  "    background-color: rgb(213, 255, 213);\n"
-                                  "}\n"
-                                  "QPushButton:hover{\n"
-                                  "    border: 1px solid rgb(0, 255, 127);\n"
-                                  "    border-radius: 20px;\n"
-                                  "    background-color: rgb(0, 170, 0);\n"
-                                  "}\n"
-                                  "\n"
-                                  "QPushButton:pressed{\n"
-                                  "    border: 10px solid rgb(0, 255, 127);\n"
-                                  "    border-radius: 20px;\n"
-                                  "    background-color: rgb(0, 170, 0);\n"
-                                  "}\n"
-                                  "")
+"    border: 1px solid rgb(0, 255, 127);\n"
+"    border-radius: 20px;\n"
+"    background-color: rgb(213, 255, 213);\n"
+"}\n"
+"QPushButton:hover{\n"
+"    border: 1px solid rgb(0, 255, 127);\n"
+"    border-radius: 20px;\n"
+"    background-color: rgb(0, 170, 0);\n"
+"}\n"
+"\n"
+"QPushButton:pressed{\n"
+"    border: 10px solid rgb(0, 255, 127);\n"
+"    border-radius: 20px;\n"
+"    background-color: rgb(0, 170, 0);\n"
+"}\n"
+"")
         self.unlock.setText("")
         icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap(":/newPrefix/unlock.png"),
-                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon6.addPixmap(QtGui.QPixmap(":/newPrefix/unlock.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.unlock.setIcon(icon6)
         self.unlock.setIconSize(QtCore.QSize(100, 100))
         self.unlock.setFlat(True)
@@ -263,39 +246,35 @@ class Ui_MainWindow(object):
         self.sendFile = QtWidgets.QPushButton(self.gridLayoutWidget)
         self.sendFile.setAutoFillBackground(False)
         self.sendFile.setStyleSheet("QPushButton{\n"
-                                    "    border: 1px solid rgb(0, 255, 127);\n"
-                                    "    border-radius: 20px;\n"
-                                    "    background-color: rgb(213, 255, 213);\n"
-                                    "}\n"
-                                    "QPushButton:hover{\n"
-                                    "    border: 1px solid rgb(0, 255, 127);\n"
-                                    "    border-radius: 20px;\n"
-                                    "    background-color: rgb(0, 170, 0);\n"
-                                    "}\n"
-                                    "\n"
-                                    "QPushButton:pressed{\n"
-                                    "    border: 10px solid rgb(0, 255, 127);\n"
-                                    "    border-radius: 20px;\n"
-                                    "    background-color: rgb(0, 170, 0);\n"
-                                    "}\n"
-                                    "")
+"    border: 1px solid rgb(0, 255, 127);\n"
+"    border-radius: 20px;\n"
+"    background-color: rgb(213, 255, 213);\n"
+"}\n"
+"QPushButton:hover{\n"
+"    border: 1px solid rgb(0, 255, 127);\n"
+"    border-radius: 20px;\n"
+"    background-color: rgb(0, 170, 0);\n"
+"}\n"
+"\n"
+"QPushButton:pressed{\n"
+"    border: 10px solid rgb(0, 255, 127);\n"
+"    border-radius: 20px;\n"
+"    background-color: rgb(0, 170, 0);\n"
+"}\n"
+"")
         self.sendFile.setText("")
         icon7 = QtGui.QIcon()
-        icon7.addPixmap(QtGui.QPixmap(":/newPrefix/send-file.png"),
-                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon7.addPixmap(QtGui.QPixmap(":/newPrefix/send-file.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.sendFile.setIcon(icon7)
         self.sendFile.setIconSize(QtCore.QSize(100, 100))
         self.sendFile.setFlat(True)
         self.sendFile.setObjectName("sendFile")
         self.gridLayout_2.addWidget(self.sendFile, 1, 2, 1, 1)
-        spacerItem1 = QtWidgets.QSpacerItem(
-            10, 10, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
+        spacerItem1 = QtWidgets.QSpacerItem(10, 10, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.gridLayout_2.addItem(spacerItem1, 1, 0, 1, 1)
-        spacerItem2 = QtWidgets.QSpacerItem(
-            17, 17, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
+        spacerItem2 = QtWidgets.QSpacerItem(10, 10, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.gridLayout_2.addItem(spacerItem2, 1, 5, 1, 1)
-        spacerItem3 = QtWidgets.QSpacerItem(
-            10, 10, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
+        spacerItem3 = QtWidgets.QSpacerItem(10, 10, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.gridLayout_2.addItem(spacerItem3, 0, 5, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
@@ -315,14 +294,6 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.label1.setText(_translate("MainWindow", "users list"))
-        __sortingEnabled = self.usersList.isSortingEnabled()
         self.usersList.setSortingEnabled(False)
-        item = self.usersList.item(0)
-        item.setText(_translate("MainWindow", "user1"))
-        item = self.usersList.item(1)
-        item.setText(_translate("MainWindow", "user2"))
-        item = self.usersList.item(2)
-        item.setText(_translate("MainWindow", "user3"))
-        self.usersList.setSortingEnabled(__sortingEnabled)
-        self.selectAllUsers.setText(
-            _translate("MainWindow", "select all users"))
+        self.selectAllUsers.setText(_translate("MainWindow", "select all users"))
+import imgs_rc

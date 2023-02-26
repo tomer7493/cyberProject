@@ -10,14 +10,20 @@ import sys
 global running_server
 global selected_users
 selected_users = []
+global all_users
 
 
 def buttons_actions(sendFile, lock, startShareScreen, stopShareScreen, turnOffStudentPC, turnStudentPCOn, unlock, watchStudentScreen, selectAllUsers, usersList, server):
     global running_server
     running_server = server
 
+    global all_users
+    all_users = usersList
+
     startShareScreen.clicked.connect(startShareScreenMet)
     stopShareScreen.clicked.connect(stopShareScreenMet)
+    watchStudentScreen.clicked.connect(watchStudentScreenMet)
+
     usersList.itemSelectionChanged.connect(
         lambda: selected_users_into_list(usersList))
 
@@ -25,22 +31,38 @@ def buttons_actions(sendFile, lock, startShareScreen, stopShareScreen, turnOffSt
 def startShareScreenMet():
     running_server.server_assignment_queue.put(
         ("startShareScreenMet", "", selected_users))
-    print(111)
+    print(1111)
 
 
 def stopShareScreenMet():
-    running_server.server_assignment_queue.put(("stopShareScreenMet", "",""))
-    print(111)
+    running_server.server_assignment_queue.put(
+        ("stopShareScreenMet", "", selected_users))
+    print(1112)
+
+
+def watchStudentScreenMet():
+    running_server.server_assignment_queue.put(
+        ("watchStudentScreenMet", "", selected_users))
+    print(1113)
+
+
+def add_user_to_list(username: str):
+    all_users.addItem(username)
 
 
 def selected_users_into_list(users_list):
     global selected_users
+    selected_users = []
     for user_num in range(users_list.count()):
         if (users_list.item(user_num).isSelected()):
-            selected_users.append(users_list.item(user_num))
+            user_name = users_list.item(user_num).text()
+            user_addr = running_server.database.get_user_by_single_info(
+                user_name, 1)
+            selected_users.append((user_addr[2], user_addr[3]))
 
 
 def all_users_into_list(users_list):
     global selected_users
+    selected_users = []
     for user_num in range(users_list.count()):
-            selected_users.append(users_list.item(user_num))
+        selected_users.append(users_list.item(user_num))
