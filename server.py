@@ -16,6 +16,8 @@ from vidstream import StreamingServer, ScreenShareClient
 IP = socket.gethostbyname(socket.gethostname())
 
 ADDR = (IP, PORT)
+print(ADDR)
+# ADDR = ("192.168.1.25", PORT)
 
 
 class Server:
@@ -30,6 +32,8 @@ class Server:
         self.queue_for_client_dict = {}
         self.database = database.users_db("users_database.db")
         self.connected_users = 0
+        # self.server_get_share_screen = StreamingServer(ADDR[0], 10000).start_server()
+        self.first_run = True
 
         global shutdown
         shutdown = False
@@ -64,7 +68,7 @@ class Server:
         send_to_client_thread = threading.Thread(
             target=self.send_to_client, args=(client_conn, client_addr, client_assignment_queue))
         send_to_client_thread.start()
-        self.connected_users+=1
+        self.connected_users += 1
 
     def handle_server_assignment(self):
         while (not shutdown):
@@ -103,9 +107,14 @@ class Server:
         # when the client first connecting to the server, the signup command will be send
         msg = self.protocol_msg_to_send("signup", "enter your name: ")
         client_conn.send(msg)
-        id =""
-        server = ""
+        id = ""
+        server_share = ""
         inAction = False
+        if self.first_run:
+            server_get_share_screen = StreamingServer(ADDR[0], 10000).start_server()
+            print(client_addr,88888888888888888888888)
+            self.first_run = False
+        share_screen_first_run = True
         while (not shutdown):
             msg = ""
             # # checks if the this client is the last one the should get the assignment
@@ -122,37 +131,40 @@ class Server:
             # for x in data:
             #    print(333,x.text())
 
-            if (cmd == "close server"):
-                msg = self.protocol_msg_to_send("close client", "")
-
-                break
-
-            elif (cmd == "startShareScreenMet"):
-                server = ScreenShareClient(
-                    socket.gethostbyname(socket.gethostname()), 10000+id)
-                msg = self.protocol_msg_to_send("startShareScreenMet", str(10000+id))
-                inAction = True
-                server.start_stream()
-
-            elif (cmd == "stopShareScreenMet"):
-                msg = self.protocol_msg_to_send("stopShareScreenMet", "")
-                inAction = False
-                server.stop_stream()
-            # elif (cmd == "watchStudentScreenMet"):
-                
-            
-            elif (cmd == "signup"):
+            if (cmd == "signup"):
                 self.database.add_client(
                     data, client_addr[0], client_addr[1], "TODO")
                 uiActions.add_user_to_list(data)
                 msg = self.protocol_msg_to_send(cmd, "registration successful")
-                id =  self.database.get_user_by_single_info(data,1)[0]
+                id = self.database.get_user_by_single_info(data, 1)[0]
+
+            elif (cmd == "close server"):
+                msg = self.protocol_msg_to_send("close client", "")
+                break
+
+            elif (cmd == "startShareScreenMet"):
+                server_share = ScreenShareClient(
+                    socket.gethostbyname(socket.gethostname()), 10000+id)
+                msg = self.protocol_msg_to_send("startShareScreenMet", str(10000+id))
+                # inAction = True
+                server_share.start_stream()
+
+            elif (cmd == "stopShareScreenMet"):
+                msg = self.protocol_msg_to_send("stopShareScreenMet", "")
+                # inAction = False
+                server_share.stop_stream()
+                
+            elif (cmd == "watchStudentScreenMet"):
+                print(client_addr[0], "hahahhahahha")
+                msg = self.protocol_msg_to_send(
+                    "watchStudentScreenMet", str(10000))
+
             if (not msg == ""):
                 client_conn.send(msg)
-                
+
     # def send_all (self,msg):
     #     self.
-        
+
     def protocol_msg_to_send(self, cmd, data):
         return f"{cmd}@{data}".encode(FORMAT)
 

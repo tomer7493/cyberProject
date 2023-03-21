@@ -47,9 +47,14 @@ class Client:
         receive_thread = threading.Thread(target=self.recv_thread)
         receive_thread.start()
 
-        client = ""
+        client_get = ""
         
-        print(self.server_address[0])
+        share_screen_first_run = True
+        get_screen_first_run = True
+        
+        client_share = ScreenShareClient(self.server_address[0], 10000)
+
+        print(self.server_address[0],11111111111111111111)
         inAction = False
 
         while (not self.close_client):
@@ -68,13 +73,27 @@ class Client:
                 self.sock.close()
                 break
             elif (cmd == "startShareScreenMet"):
-                client = StreamingServer(self.server_address[0], int(data))
-                inAction = True
-                client.start_server()
+                if (get_screen_first_run):
+                    print(socket.gethostbyname(socket.gethostname()),int(data),"hahahhahahahah")#socket.gethostbyname(socket.gethostname())
+                    client_get = StreamingServer("192.168.56.1", int(data))
+                    get_screen_first_run = False
+                # inAction = True
+                client_get.start_server()
             elif (cmd == "stopShareScreenMet"):
-                inAction = False
-                client.stop_server()
+                # inAction = False
+                client_get.stop_server()
 
+            elif (cmd == "watchStudentScreenMet"):
+                if (inAction):
+                    inAction = False
+                    print("noooooooooooooooo")
+                    client_share.stop_stream()
+                    client_share._cleanup()
+                else:
+                    inAction = True
+                    client_share.start_stream()
+                
+                
     def protocol_msg_to_send(self, cmd, data):
         return f"{cmd}@{data}".encode(FORMAT)
 
