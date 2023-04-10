@@ -144,7 +144,7 @@ class Server:
 
             elif (cmd == "startShareScreenMet"):
                 server_share = ScreenShareClient(
-                    socket.gethostbyname(socket.gethostname()), 10000+id)
+                    client_addr[0], 10000+id)
                 msg = self.protocol_msg_to_send("startShareScreenMet", str(10000+id))
                 # inAction = True
                 server_share.start_stream()

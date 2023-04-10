@@ -75,7 +75,7 @@ class Client:
             elif (cmd == "startShareScreenMet"):
                 if (get_screen_first_run):
                     print(socket.gethostbyname(socket.gethostname()),int(data),"hahahhahahahah")#socket.gethostbyname(socket.gethostname())
-                    client_get = StreamingServer("192.168.56.1", int(data))
+                    client_get = StreamingServer(socket.gethostbyname(socket.gethostname()), int(data))
                     get_screen_first_run = False
                 # inAction = True
                 client_get.start_server()
@@ -99,7 +99,7 @@ class Client:
 
 
 def main():
-    Client()
+    Client(("10.51.101.66",PORT))
 
 
 if __name__ == "__main__":
