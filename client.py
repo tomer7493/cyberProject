@@ -3,6 +3,7 @@ import socket
 import threading
 from finals import *
 import queue
+import time
 from vidstream import StreamingServer,ScreenShareClient
 
 
@@ -11,7 +12,7 @@ class Client:
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_address = server_address
         self.assignment_queue = queue.Queue()
-
+        self.id = ""
         self.close_client = False
         try:
             self.sock.connect(self.server_address)
@@ -52,7 +53,7 @@ class Client:
         share_screen_first_run = True
         get_screen_first_run = True
         
-        client_share = ScreenShareClient(self.server_address[0], 10000)
+        client_share = ""
 
         print(self.server_address[0],11111111111111111111)
         inAction = False
@@ -61,8 +62,9 @@ class Client:
             cmd, data = self.assignment_queue.get()
             print(cmd, 85274, data)
             if (cmd == "signup"):
-                if (data == "registration successful"):
+                if (data.split("#")[0] == "registration successful"):
                     print(data)
+                    self.id = data.split("#")[1]
                 else:
                     name = input(data)
                     msg = self.protocol_msg_to_send("signup", name)
@@ -73,25 +75,28 @@ class Client:
                 self.sock.close()
                 break
             elif (cmd == "startShareScreenMet"):
-                if (get_screen_first_run):
-                    print(socket.gethostbyname(socket.gethostname()),int(data),"hahahhahahahah")#socket.gethostbyname(socket.gethostname())
-                    client_get = StreamingServer(socket.gethostbyname(socket.gethostname()), int(data))
-                    get_screen_first_run = False
+                #if (get_screen_first_run):
+                print(socket.gethostbyname(socket.gethostname()),int(data),"hahahhahahahah")#socket.gethostbyname(socket.gethostname())
+                client_get = StreamingServer(socket.gethostbyname(socket.gethostname()), int(data))
+                get_screen_first_run = False
                 # inAction = True
                 client_get.start_server()
             elif (cmd == "stopShareScreenMet"):
                 # inAction = False
+                
                 client_get.stop_server()
 
             elif (cmd == "watchStudentScreenMet"):
                 if (inAction):
-                    inAction = False
                     print("noooooooooooooooo")
+                    time.sleep(0.5)
                     client_share.stop_stream()
-                    client_share._cleanup()
+                    #client_share._cleanup()
                 else:
-                    inAction = True
+                    client_share = ScreenShareClient(self.server_address[0], 10000+int(self.id))
                     client_share.start_stream()
+                    
+                inAction =not inAction
                 
                 
     def protocol_msg_to_send(self, cmd, data):
@@ -99,7 +104,7 @@ class Client:
 
 
 def main():
-    Client(("10.51.101.66",PORT))
+    Client(("192.168.1.21",PORT))
 
 
 if __name__ == "__main__":
