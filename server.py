@@ -109,12 +109,14 @@ class Server:
         client_conn.send(msg)
         id = ""
         server_share = ""
+        server_get_share_screen = ""
         inAction = False
         if self.first_run:
-            server_get_share_screen = StreamingServer(ADDR[0], 10000).start_server()
+            # server_get_share_screen = StreamingServer(ADDR[0], 10000).start_server()
             print(client_addr,88888888888888888888888)
             self.first_run = False
         share_screen_first_run = True
+        start_or_stop = True
         while (not shutdown):
             msg = ""
             # # checks if the this client is the last one the should get the assignment
@@ -135,8 +137,8 @@ class Server:
                 self.database.add_client(
                     data, client_addr[0], client_addr[1], "TODO")
                 uiActions.add_user_to_list(data)
-                msg = self.protocol_msg_to_send(cmd, "registration successful")
                 id = self.database.get_user_by_single_info(data, 1)[0]
+                msg = self.protocol_msg_to_send(cmd, f"registration successful#{id}")
 
             elif (cmd == "close server"):
                 msg = self.protocol_msg_to_send("close client", "")
@@ -152,13 +154,20 @@ class Server:
             elif (cmd == "stopShareScreenMet"):
                 msg = self.protocol_msg_to_send("stopShareScreenMet", "")
                 # inAction = False
+                time.sleep(0.5)
                 server_share.stop_stream()
                 
             elif (cmd == "watchStudentScreenMet"):
-                print(client_addr[0], "hahahhahahha")
+                if start_or_stop:    
+                    print(client_addr[0], "hahahhahahha")
+                    server_get_share_screen = StreamingServer(ADDR[0], 10000+id)
+                    server_get_share_screen.start_server() 
+                else:
+                    server_get_share_screen.stop_server()
                 msg = self.protocol_msg_to_send(
                     "watchStudentScreenMet", str(10000))
-
+                
+                start_or_stop = not start_or_stop
             if (not msg == ""):
                 client_conn.send(msg)
 
