@@ -19,7 +19,7 @@ IP = socket.gethostbyname(socket.gethostname())
 
 ADDR = (IP, PORT)
 print(ADDR)
-# ADDR = ("192.168.1.25", PORT)
+ADDR = ("192.168.1.21", PORT)
 
 
 class Server:
@@ -150,9 +150,9 @@ class Server:
                 break
 
             elif (cmd == "startShareScreenMet"):
-                
+                print (type (stop_queue),154852178451278451284521084521)
                 client_send_screen = threading.Thread(
-                target=clientShareVideo.client, args=(client_addr[0],10000+id,stop_queue))
+                target=clientShareVideo.client, args=(stop_queue,client_addr[0],10000+id))
                 client_send_screen.start()
                 # server_share = ScreenShareClient(
                 #     client_addr[0], 10000+id)
