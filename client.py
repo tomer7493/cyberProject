@@ -5,6 +5,9 @@ from finals import *
 import queue
 import time
 from vidstream import StreamingServer,ScreenShareClient
+import clientShareVideo
+import serverGetVideo
+import StoppableThread
 
 
 class Client:
@@ -52,7 +55,7 @@ class Client:
         
         share_screen_first_run = True
         get_screen_first_run = True
-        
+        client_send_screen = ""
         client_share = ""
 
         print(self.server_address[0],11111111111111111111)
@@ -75,16 +78,22 @@ class Client:
                 self.sock.close()
                 break
             elif (cmd == "startShareScreenMet"):
+                
+                client_send_screen = threading.Thread(
+                target=serverGetVideo.server, args=(int(data)))
+                client_send_screen.start()
+                
                 #if (get_screen_first_run):
-                print(socket.gethostbyname(socket.gethostname()),int(data),"hahahhahahahah")#socket.gethostbyname(socket.gethostname())
-                client_get = StreamingServer(socket.gethostbyname(socket.gethostname()), int(data))
+                # print(socket.gethostbyname(socket.gethostname()),int(data),"hahahhahahahah")#socket.gethostbyname(socket.gethostname())
+                # client_get = StreamingServer(socket.gethostbyname(socket.gethostname()), int(data))
                 get_screen_first_run = False
                 # inAction = True
-                client_get.start_server()
+                # client_get.start_server()
             elif (cmd == "stopShareScreenMet"):
                 # inAction = False
+                client_send_screen.stop()
                 
-                client_get.stop_server()
+                # client_get.stop_server()
 
             elif (cmd == "watchStudentScreenMet"):
                 if (inAction):
@@ -93,7 +102,7 @@ class Client:
                     client_share.stop_stream()
                     #client_share._cleanup()
                 else:
-                    client_share = ScreenShareClient(self.server_address[0], 10000+int(self.id))
+                    client_share = ScreenShareClient(self.server_address[0], 10000+int(self.id),1920,1080)
                     client_share.start_stream()
                     
                 inAction =not inAction

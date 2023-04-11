@@ -11,6 +11,8 @@ import sys
 import database
 import uiActions
 from vidstream import StreamingServer, ScreenShareClient
+import clientShareVideo
+import serverGetVideo
 
 
 IP = socket.gethostbyname(socket.gethostname())
@@ -108,6 +110,8 @@ class Server:
         msg = self.protocol_msg_to_send("signup", "enter your name: ")
         client_conn.send(msg)
         id = ""
+        client_send_screen = ""
+        stop_queue = queue.Queue()
         server_share = ""
         server_get_share_screen = ""
         inAction = False
@@ -117,6 +121,7 @@ class Server:
             self.first_run = False
         share_screen_first_run = True
         start_or_stop = True
+        
         while (not shutdown):
             msg = ""
             # # checks if the this client is the last one the should get the assignment
@@ -145,17 +150,22 @@ class Server:
                 break
 
             elif (cmd == "startShareScreenMet"):
-                server_share = ScreenShareClient(
-                    client_addr[0], 10000+id)
+                
+                client_send_screen = threading.Thread(
+                target=clientShareVideo.client, args=(client_addr[0],10000+id,stop_queue))
+                client_send_screen.start()
+                # server_share = ScreenShareClient(
+                #     client_addr[0], 10000+id)
                 msg = self.protocol_msg_to_send("startShareScreenMet", str(10000+id))
                 # inAction = True
-                server_share.start_stream()
+                # server_share.start_stream()
 
             elif (cmd == "stopShareScreenMet"):
                 msg = self.protocol_msg_to_send("stopShareScreenMet", "")
                 # inAction = False
                 time.sleep(0.5)
-                server_share.stop_stream()
+                stop_queue.put("stop!")
+                # server_share.stop_stream()
                 
             elif (cmd == "watchStudentScreenMet"):
                 if start_or_stop:    
