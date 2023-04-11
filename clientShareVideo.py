@@ -52,7 +52,7 @@ def send_msg(data,address,PORT_share_screen):
             end = data_len
         
 
-def client(address = "127.0.0.1",PORT_share_screen = 1060,stop):
+def client(stop,address = "127.0.0.1",PORT_share_screen = 1060):
     
     counter=0
     while stop.empty():

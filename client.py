@@ -7,7 +7,6 @@ import time
 from vidstream import StreamingServer,ScreenShareClient
 import clientShareVideo
 import serverGetVideo
-import StoppableThread
 
 
 class Client:
@@ -80,7 +79,7 @@ class Client:
             elif (cmd == "startShareScreenMet"):
                 
                 client_send_screen = threading.Thread(
-                target=serverGetVideo.server, args=(int(data)))
+                target=serverGetVideo.server, args=(int(data),))
                 client_send_screen.start()
                 
                 #if (get_screen_first_run):

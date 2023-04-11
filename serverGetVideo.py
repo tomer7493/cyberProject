@@ -21,7 +21,7 @@ def server(PORT_share_screen=1060):
     print ("server start run")
     app = pyg()
     app.start()
-    s.bind(('127.0.0.1', PORT_share_screen))
+    s.bind(("127.0.0.1", PORT_share_screen))
     
     while(1):
         flag=0
