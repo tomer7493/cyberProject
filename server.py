@@ -17,7 +17,7 @@ IP = socket.gethostbyname(socket.gethostname())
 
 ADDR = (IP, PORT)
 print(ADDR)
-# ADDR = ("192.168.1.25", PORT)
+ADDR = ("192.168.1.21", PORT)
 
 
 class Server:
@@ -146,7 +146,7 @@ class Server:
 
             elif (cmd == "startShareScreenMet"):
                 server_share = ScreenShareClient(
-                    client_addr[0], 10000+id)
+                    client_addr[0], 10000+id,1920,1050)
                 msg = self.protocol_msg_to_send("startShareScreenMet", str(10000+id))
                 # inAction = True
                 server_share.start_stream()
