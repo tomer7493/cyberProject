@@ -93,7 +93,7 @@ class Client:
                     client_share.stop_stream()
                     #client_share._cleanup()
                 else:
-                    client_share = ScreenShareClient(self.server_address[0], 10000+int(self.id))
+                    client_share = ScreenShareClient(self.server_address[0], 10000+int(self.id),1920,1050)
                     client_share.start_stream()
                     
                 inAction =not inAction
