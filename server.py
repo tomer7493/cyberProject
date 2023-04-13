@@ -38,8 +38,12 @@ def receive_public_key_and_derive_key(conn, private_key):
     shared_key = private_key.exchange(client_public_key)
     return shared_key
 
-context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
-context.load_cert_chain(certfile="cyberProject\server.crt", keyfile="cyberProject\server.key")
+# context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+# context.load_cert_chain(certfile="cyberProject\server.crt", keyfile="cyberProject\server.key")
+purpose = ssl.Purpose.CLIENT_AUTH
+context = ssl.create_default_context(purpose, cafile="cyberProject\keys_try\localhost.pem")
+context.load_cert_chain("cyberProject\keys_try\ca.crt")
+
 
 IP = socket.gethostbyname(socket.gethostname())
 
@@ -56,7 +60,6 @@ class Server:
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind(ADDR)
         self.server_socket.listen()
-        self.server_socket = context.wrap_socket(self.server_socket, server_side=True)
         self.unregistered_users_list = {}
         self.queue_for_client_dict = {}
         self.database = database.users_db("users_database.db")
@@ -77,6 +80,8 @@ class Server:
         while (True):  # this loop will be closed immediately when the server will shut down because off the try-except statement
             try:
                 client_conn, client_addr = self.server_socket.accept()
+                self.server_socket = context.wrap_socket(self.server_socket, server_side=True)
+
             except OSError:  # If the ui is closed the server will shutdown
                 exit(0)
             handle_client_thread = threading.Thread(

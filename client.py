@@ -27,7 +27,11 @@ def receive_public_key_and_send_public_key(conn):
     conn.sendall(serialized_key)
     return private_key
 
-context = ssl.create_default_context()
+# context = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
+# context.load_verify_locations(cafile='cyberProject\server.crt')
+
+purpose = ssl.Purpose.SERVER_AUTH
+context = ssl.create_default_context(purpose, cafile="cyberProject\keys_try\localhost.pem")
 
 class Client:
     def __init__(self, server_address=(socket.gethostbyname(socket.gethostname()), PORT)):
@@ -37,7 +41,9 @@ class Client:
         self.id = ""
         self.close_client = False
         try:
+            
             self.sock.connect(self.server_address)
+            print(111)
             self.sock=context.wrap_socket(self.sock, server_hostname=str(self.server_address))
             print("Connected to server from address", self.server_address)
 
