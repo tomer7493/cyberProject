@@ -27,11 +27,11 @@ def receive_public_key_and_send_public_key(conn):
     conn.sendall(serialized_key)
     return private_key
 
-# context = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
-# context.load_verify_locations(cafile='cyberProject\server.crt')
+context = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
+context.load_verify_locations(cafile='cyberProject\server.crt')
 
-purpose = ssl.Purpose.SERVER_AUTH
-context = ssl.create_default_context(purpose, cafile="cyberProject\keys_try\localhost.pem")
+# purpose = ssl.Purpose.SERVER_AUTH
+# context = ssl.create_default_context(purpose, cafile="cyberProject\keys_try\localhost.pem")
 
 class Client:
     def __init__(self, server_address=(socket.gethostbyname(socket.gethostname()), PORT)):
