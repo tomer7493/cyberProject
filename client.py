@@ -12,6 +12,8 @@ import secrets
 from cryptography.hazmat.primitives.asymmetric import dh
 from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+import ssl
+
 
 # Receive the server's public key and send the client's public key
 def receive_public_key_and_send_public_key(conn):
@@ -45,6 +47,11 @@ class Client:
             self.sock.connect(self.server_address)
             print(111)
             self.sock=context.wrap_socket(self.sock, server_hostname=str(self.server_address))
+            # Set the SSL protocol version
+            ssl_context  = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+            # Create an SSL socket
+            self.sock = ssl_context .wrap_socket(socket.socket(), server_hostname=str(self.server_address))
+            
             print("Connected to server from address", self.server_address)
 
         except Exception as e:
