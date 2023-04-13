@@ -33,7 +33,10 @@
 # input("121")
 # # When You Are Done
 # server.stop_server()
-import ssl
+# import ssl
 
-print(ssl.PROTOCOL_SSLv23)
+# print(ssl.PROTOCOL_SSLv23)
+with open(r'C:\Users\User\Downloads\readme.txt') as f:
+    lines = f.readlines()
+    print(lines)
 

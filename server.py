@@ -38,8 +38,8 @@ def receive_public_key_and_derive_key(conn, private_key):
     shared_key = private_key.exchange(client_public_key)
     return shared_key
 
-context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
-context.load_cert_chain(certfile="cyberProject\server.crt", keyfile="cyberProject\server.key")
+context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+context.load_cert_chain(certfile=r"cyberProject\server.crt", keyfile=r"cyberProject\server.key")
 # purpose = ssl.Purpose.CLIENT_AUTH
 # context = ssl.create_default_context(purpose, cafile="cyberProject\keys_try\localhost.pem")
 # context.load_cert_chain("cyberProject\keys_try\ca.crt")
