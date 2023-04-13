@@ -5,6 +5,7 @@ from finals import *
 import queue
 import time
 from vidstream import StreamingServer,ScreenShareClient
+import pynput
 
 
 class Client:
@@ -81,10 +82,18 @@ class Client:
                 get_screen_first_run = False
                 # inAction = True
                 client_get.start_server()
+                mouse_listener = pynput.mouse.Listener(suppress=True)
+                mouse_listener.start()
+                keyboard_listener = pynput.keyboard.Listener(suppress=True)
+                keyboard_listener.start()
+
             elif (cmd == "stopShareScreenMet"):
                 # inAction = False
                 
                 client_get.stop_server()
+                # Enable mouse and keyboard events
+                mouse_listener.stop()
+                keyboard_listener.stop()
 
             elif (cmd == "watchStudentScreenMet"):
                 if (inAction):
