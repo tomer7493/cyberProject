@@ -39,7 +39,7 @@ def receive_public_key_and_derive_key(conn, private_key):
     return shared_key
 
 context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
-context.load_cert_chain(certfile="server.crt", keyfile="server.key")
+context.load_cert_chain(certfile="cyberProject\server.crt", keyfile="cyberProject\server.key")
 
 IP = socket.gethostbyname(socket.gethostname())
 
