@@ -11,7 +11,35 @@ import sys
 import database
 import uiActions
 from vidstream import StreamingServer, ScreenShareClient
+import socket
+import ssl
+import secrets
+from cryptography.hazmat.primitives.asymmetric import dh
+from cryptography.hazmat.primitives import serialization, hashes
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
+# Generate a new private-public key pair for the server
+parameters = dh.generate_parameters(generator=2, key_size=2048)
+private_key = parameters.generate_private_key()
+public_key = private_key.public_key()
+
+# Send the server's public key to the client
+def send_public_key(conn, public_key):
+    serialized_key = public_key.public_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PublicFormat.SubjectPublicKeyInfo
+    )
+    conn.sendall(serialized_key)
+
+# Receive the client's public key and derive a shared secret key
+def receive_public_key_and_derive_key(conn, private_key):
+    serialized_key = conn.recv(1024)
+    client_public_key = serialization.load_pem_public_key(serialized_key)
+    shared_key = private_key.exchange(client_public_key)
+    return shared_key
+
+context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+context.load_cert_chain(certfile="server.crt", keyfile="server.key")
 
 IP = socket.gethostbyname(socket.gethostname())
 
@@ -28,6 +56,7 @@ class Server:
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind(ADDR)
         self.server_socket.listen()
+        self.server_socket = context.wrap_socket(self.server_socket, server_side=True)
         self.unregistered_users_list = {}
         self.queue_for_client_dict = {}
         self.database = database.users_db("users_database.db")
@@ -103,7 +132,15 @@ class Server:
             self.server_assignment_queue.put((cmd, data, (client_address,)))
 
     def send_to_client(self, client_conn, client_addr, assignment_queue):
-
+        
+        # Securely exchange keys with the client
+        send_public_key(client_conn, public_key)
+        shared_key = receive_public_key_and_derive_key(client_conn, private_key)
+        
+        # Use the shared key for encryption
+        cipher = Cipher(algorithms.AES(shared_key), modes.CBC(secrets.token_bytes(16)))
+        encryptor = cipher.encryptor()
+        
         # when the client first connecting to the server, the signup command will be send
         msg = self.protocol_msg_to_send("signup", "enter your name: ")
         client_conn.send(msg)
@@ -169,7 +206,7 @@ class Server:
                 
                 start_or_stop = not start_or_stop
             if (not msg == ""):
-                client_conn.send(msg)
+                client_conn.send(encryptor.update(msg) + encryptor.finalize())
 
     # def send_all (self,msg):
     #     self.

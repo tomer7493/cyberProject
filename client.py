@@ -6,7 +6,28 @@ import queue
 import time
 from vidstream import StreamingServer,ScreenShareClient
 import pynput
+import socket
+import ssl
+import secrets
+from cryptography.hazmat.primitives.asymmetric import dh
+from cryptography.hazmat.primitives import serialization, hashes
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
+# Receive the server's public key and send the client's public key
+def receive_public_key_and_send_public_key(conn):
+    serialized_key = conn.recv(1024)
+    server_public_key = serialization.load_pem_public_key(serialized_key)
+    parameters = server_public_key.parameters()
+    private_key = parameters.generate_private_key()
+    public_key = private_key.public_key()
+    serialized_key = public_key.public_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PublicFormat.SubjectPublicKeyInfo
+    )
+    conn.sendall(serialized_key)
+    return private_key
+
+context = ssl.create_default_context()
 
 class Client:
     def __init__(self, server_address=(socket.gethostbyname(socket.gethostname()), PORT)):
@@ -17,7 +38,9 @@ class Client:
         self.close_client = False
         try:
             self.sock.connect(self.server_address)
+            self.sock=context.wrap_socket(self.sock, server_hostname=self.server_address)
             print("Connected to server from address", self.server_address)
+
         except Exception as e:
             print("There is a problem with connecting to server")
             print("server address:", self.server_address)
@@ -26,10 +49,20 @@ class Client:
         self.handle_server()
 
     def recv_thread(self):
+        
+        # Securely exchange keys with the server
+        private_key = receive_public_key_and_send_public_key(self.sock)
+        shared_key = private_key.exchange(self.sock.server_public_key())
+
+        # Use the shared key for decryption
+        cipher = Cipher(algorithms.AES(shared_key), modes.CBC(secrets.token_bytes(16)))
+        decryptor = cipher.decryptor()
+        
         while (not self.close_client):
             raw_data = ""
             try:
                 raw_data = self.sock.recv(SIZE)
+                raw_data = decryptor.update(raw_data) + decryptor.finalize()
             except:
                 if (self.close_client):
                     break
@@ -46,6 +79,9 @@ class Client:
             self.assignment_queue.put((cmd, data))
 
     def handle_server(self):
+        
+        
+        
         receive_thread = threading.Thread(target=self.recv_thread)
         receive_thread.start()
 
