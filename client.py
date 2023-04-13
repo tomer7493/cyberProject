@@ -38,7 +38,7 @@ class Client:
         self.close_client = False
         try:
             self.sock.connect(self.server_address)
-            self.sock=context.wrap_socket(self.sock, server_hostname=self.server_address)
+            self.sock=context.wrap_socket(self.sock, server_hostname=str(self.server_address))
             print("Connected to server from address", self.server_address)
 
         except Exception as e:
