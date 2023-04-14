@@ -7,12 +7,10 @@ import time
 from vidstream import StreamingServer,ScreenShareClient
 import pynput
 import socket
-import ssl
 import secrets
 from cryptography.hazmat.primitives.asymmetric import dh
 from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-import ssl
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
 from Crypto.Random import get_random_bytes
