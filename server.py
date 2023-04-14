@@ -168,7 +168,7 @@ class Server:
         
         # when the client first connecting to the server, the signup command will be send
         msg = self.protocol_msg_to_send("signup", "enter your name: ")
-        client_conn.send(encrypt_data(msg))
+        client_conn.send(encrypt_data(msg,self.private_key))
         id = ""
         server_share = ""
         server_get_share_screen = ""
@@ -237,8 +237,8 @@ class Server:
     #     self.
 
     def protocol_msg_to_send(self, cmd, data):
-        return f"{cmd}@{data}".encode(FORMAT)
-
+        # return f"{cmd}@{data}".encode(FORMAT)
+        return f"{cmd}@{data}"
     def uiRunner(self):
         # You need one (and only one) QApplication instance per application.
         # Pass in sys.argv to allow command line arguments for your app.
