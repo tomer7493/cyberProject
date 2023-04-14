@@ -182,7 +182,8 @@ class Client:
 
                 
     def protocol_msg_to_send(self, cmd, data):
-        return f"{cmd}@{data}".encode(FORMAT)
+        # return f"{cmd}@{data}".encode(FORMAT)
+        return f"{cmd}@{data}"
 
 
 def main():
