@@ -40,6 +40,7 @@ def dh_key_exchange(conn):
 def encrypt_data(data, key):
     iv = get_random_bytes(AES.block_size)
     cipher = AES.new(key, AES.MODE_CBC, iv)
+    padded_data = pad(data.encode('utf-8'), AES.block_size)
     encrypted_data = iv + cipher.encrypt(pad(data.encode('utf-8'), AES.block_size))
     return encrypted_data
 
@@ -55,6 +56,7 @@ def decrypt_data(data, key):
     iv = data[:AES.block_size]
     cipher = AES.new(key, AES.MODE_CBC, iv)
     decrypted_data = unpad(cipher.decrypt(data[AES.block_size:]), AES.block_size)
+    unpadded_data = unpad(decrypted_data, AES.block_size)
     return decrypted_data.decode('utf-8')
 
 def send_request(conn, key):
