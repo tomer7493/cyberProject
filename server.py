@@ -22,50 +22,54 @@ from Crypto.Util.Padding import pad, unpad
 from Crypto.Random import get_random_bytes
 
 
-def encrypt_data(data, key):
-    iv = get_random_bytes(AES.block_size)
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    padded_data = pad(data.encode('utf-8'), AES.block_size)
-    encrypted_data = iv + cipher.encrypt(padded_data)
-    return encrypted_data
+# def encrypt_data(data, key):
+#     iv = get_random_bytes(AES.block_size)
+#     cipher = AES.new(key, AES.MODE_CBC, iv)
+#     padded_data = pad(data.encode('utf-8'), AES.block_size)
+#     encrypted_data = iv + cipher.encrypt(padded_data)
+#     return encrypted_data
 
-def dh_key_exchange(conn):
-    # Public parameters agreed by both client and server
-    p = 23
-    g = 5
+# def dh_key_exchange(conn):
+#     # Public parameters agreed by both client and server
+#     p = 23
+#     g = 5
 
-    # Generate private key
-    b = get_random_bytes(16)  # 16 bytes for AES-128
-    B = pow(g, int.from_bytes(b, byteorder='big'), p)
+#     # Generate private key
+#     b = get_random_bytes(16)  # 16 bytes for AES-128
+#     B = pow(g, int.from_bytes(b, byteorder='big'), p)
 
-    # Send public key to client
-    conn.send(B.to_bytes(256, byteorder='big'))
+#     # Send public key to client
+#     conn.send(B.to_bytes(256, byteorder='big'))
 
-    # Receive client's public key
-    A = int.from_bytes(conn.recv(256), byteorder='big')
+#     # Receive client's public key
+#     A = int.from_bytes(conn.recv(256), byteorder='big')
 
-    # Compute shared secret key
-    s = pow(A, int.from_bytes(b, byteorder='big'), p)
-    s_bytes = s.to_bytes(16, byteorder='big')
+#     # Compute shared secret key
+#     s = pow(A, int.from_bytes(b, byteorder='big'), p)
+#     s_bytes = s.to_bytes(16, byteorder='big')
 
-    return s_bytes
-
-
-def decrypt_data(data, key):
-    iv = data[:AES.block_size]
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    decrypted_data = cipher.decrypt(data[AES.block_size:])
-    unpadded_data = unpad(decrypted_data, AES.block_size)
-    return unpadded_data.decode('utf-8')
+#     return s_bytes
 
 
+# def decrypt_data(data, key):
+#     iv = data[:AES.block_size]
+#     cipher = AES.new(key, AES.MODE_CBC, iv)
+#     decrypted_data = cipher.decrypt(data[AES.block_size:])
+#     unpadded_data = unpad(decrypted_data, AES.block_size)
+#     return unpadded_data.decode('utf-8')
+certfile=r"cyberProject\try\localhost.pem"
+cafile = r"cyberProject\try\cacert.pem"
+purpose = ssl.Purpose.CLIENT_AUTH
+context = ssl.create_default_context(purpose, cafile=cafile)
+context.load_cert_chain(certfile)
 
 IP = socket.gethostbyname(socket.gethostname())
 
 ADDR = (IP, PORT)
 print(ADDR)
-ADDR = ("192.168.1.21", PORT)
+# ADDR = ("192.168.1.21", PORT)
 
+ADDR = ("127.0.0.1", 18820)
 
 class Server:
     def __init__(self):
@@ -73,6 +77,7 @@ class Server:
         self.server_assignment_queue = queue.Queue()
         print("Server is starting")
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server_socket.bind(ADDR)
         self.server_socket.listen()
         self.unregistered_users_list = {}
@@ -98,8 +103,8 @@ class Server:
             try:
                 client_conn, client_addr = self.server_socket.accept()
                  # Perform Diffie-Hellman key exchange
-                self.private_key = dh_key_exchange(client_conn)
-    
+                # self.private_key = dh_key_exchange(client_conn)
+                client_conn = context.wrap_socket(client_conn, server_side=True)
                 
             except OSError:  # If the ui is closed the server will shutdown
                 exit(0)
@@ -147,7 +152,7 @@ class Server:
                     print("ERROR: client class - recv_thread method - receive cmd")
             # The communication protocol- [cmd]@[data]
             # raw_data = raw_data.decode(FORMAT)
-            data = decrypt_data(raw_data,self.private_key)
+            data = raw_data.decode(FORMAT)
             data = data.split("@")
 
             cmd = data[0]
@@ -168,7 +173,7 @@ class Server:
         
         # when the client first connecting to the server, the signup command will be send
         msg = self.protocol_msg_to_send("signup", "enter your name: ")
-        client_conn.send(encrypt_data(msg,self.private_key))
+        client_conn.send(msg.encode(FORMAT))
         id = ""
         server_share = ""
         server_get_share_screen = ""
@@ -231,7 +236,7 @@ class Server:
                 
                 start_or_stop = not start_or_stop
             if (not msg == ""):
-                client_conn.send(encrypt_data(msg,self.private_key))
+                client_conn.send(msg.encode(FORMAT))
 
     # def send_all (self,msg):
     #     self.

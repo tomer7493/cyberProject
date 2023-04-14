@@ -14,56 +14,61 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
 from Crypto.Random import get_random_bytes
+import ssl
 
-def dh_key_exchange(conn):
-    # Public parameters agreed by both client and server
-    p = 23
-    g = 5
+# def dh_key_exchange(conn):
+#     # Public parameters agreed by both client and server
+#     p = 23
+#     g = 5
 
-    # Generate private key
-    a = get_random_bytes(16)  # 16 bytes for AES-128
-    A = pow(g, int.from_bytes(a, byteorder='big'), p)
+#     # Generate private key
+#     a = get_random_bytes(16)  # 16 bytes for AES-128
+#     A = pow(g, int.from_bytes(a, byteorder='big'), p)
 
-    # Send public key to server
-    conn.send(A.to_bytes(256, byteorder='big'))
+#     # Send public key to server
+#     conn.send(A.to_bytes(256, byteorder='big'))
 
-    # Receive server's public key
-    B = int.from_bytes(conn.recv(256), byteorder='big')
+#     # Receive server's public key
+#     B = int.from_bytes(conn.recv(256), byteorder='big')
 
-    # Compute shared secret key
-    s = pow(B, int.from_bytes(a, byteorder='big'), p)
-    s_bytes = s.to_bytes(16, byteorder='big')
+#     # Compute shared secret key
+#     s = pow(B, int.from_bytes(a, byteorder='big'), p)
+#     s_bytes = s.to_bytes(16, byteorder='big')
 
-    return s_bytes
-
-
-def encrypt_data(data, key):
-    iv = get_random_bytes(AES.block_size)
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    padded_data = pad(data.encode('utf-8'), AES.block_size)
-    encrypted_data = iv + cipher.encrypt(padded_data)
-    return encrypted_data
+#     return s_bytes
 
 
-def receive_response(conn, key):
-    buffer_size = 1024
-    data = conn.recv(buffer_size)
-    decrypted_data = decrypt_data(data, key)
-    print(f'Received response: {decrypted_data}')
+# def encrypt_data(data, key):
+#     iv = get_random_bytes(AES.block_size)
+#     cipher = AES.new(key, AES.MODE_CBC, iv)
+#     padded_data = pad(data.encode('utf-8'), AES.block_size)
+#     encrypted_data = iv + cipher.encrypt(padded_data)
+#     return encrypted_data
 
 
-def decrypt_data(data, key):
-    iv = data[:AES.block_size]
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    decrypted_data = cipher.decrypt(data[AES.block_size:])
-    unpadded_data = unpad(decrypted_data, AES.block_size)
-    return unpadded_data.decode('utf-8')
+# def receive_response(conn, key):
+#     buffer_size = 1024
+#     data = conn.recv(buffer_size)
+#     decrypted_data = decrypt_data(data, key)
+#     print(f'Received response: {decrypted_data}')
 
-def send_request(conn, key):
-    message = 'Hello from client!'
-    encrypted_message = encrypt_data(message, key)
-    conn.send(encrypted_message)
 
+# def decrypt_data(data, key):
+#     iv = data[:AES.block_size]
+#     cipher = AES.new(key, AES.MODE_CBC, iv)
+#     decrypted_data = cipher.decrypt(data[AES.block_size:])
+#     unpadded_data = unpad(decrypted_data, AES.block_size)
+#     return unpadded_data.decode('utf-8')
+
+# def send_request(conn, key):
+#     message = 'Hello from client!'
+#     encrypted_message = encrypt_data(message, key)
+#     conn.send(encrypted_message)
+context = ssl.create_default_context()
+
+# Set the context to not verify the server's SSL/TLS certificate
+context.check_hostname = False
+context.verify_mode = ssl.CERT_NONE
 class Client:
     def __init__(self, server_address=(socket.gethostbyname(socket.gethostname()), PORT)):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -83,9 +88,9 @@ class Client:
             print(e)
             exit(0)
 
-         # Perform Diffie-Hellman key exchange
-        self.private_key = dh_key_exchange(self.sock)
-
+        #  # Perform Diffie-Hellman key exchange
+        # self.private_key = dh_key_exchange(self.sock)
+        self.sock = context.wrap_socket(self.sock, server_hostname=server_address[0])
         self.handle_server()
 
     def recv_thread(self):
@@ -104,7 +109,7 @@ class Client:
                 continue
             # The communication protocol- [cmd]@[data]
             # raw_data = raw_data.decode(FORMAT)
-            raw_data = decrypt_data(raw_data,self.private_key)
+            raw_data = raw_data.decode(FORMAT)
             raw_data = raw_data.split("@")
 
             cmd = raw_data[0]
@@ -178,7 +183,7 @@ class Client:
                     
                 inAction =not inAction
             if (msg != ""):
-                self.sock.send(encrypt_data(msg,self.private_key))
+                self.sock.send(msg.encode(FORMAT))
 
                 
     def protocol_msg_to_send(self, cmd, data):
@@ -187,8 +192,8 @@ class Client:
 
 
 def main():
-    Client(("192.168.1.21",PORT))
-    # Client()
+    # Client(("192.168.1.21",PORT))
+    Client(("127.0.0.1",18820))
 
 if __name__ == "__main__":
     main()
