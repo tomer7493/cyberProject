@@ -49,7 +49,7 @@ IP = socket.gethostbyname(socket.gethostname())
 
 ADDR = (IP, PORT)
 print(ADDR)
-# ADDR = ("192.168.1.21", PORT)
+ADDR = ("192.168.1.21", PORT)
 
 
 class Server:
@@ -145,13 +145,13 @@ class Server:
 
     def send_to_client(self, client_conn, client_addr, assignment_queue):
         
-        # Securely exchange keys with the client
-        send_public_key(client_conn, public_key)
-        shared_key = receive_public_key_and_derive_key(client_conn, private_key)
+        # # Securely exchange keys with the client
+        # send_public_key(client_conn, public_key)
+        # shared_key = receive_public_key_and_derive_key(client_conn, private_key)
         
-        # Use the shared key for encryption
-        cipher = Cipher(algorithms.AES(shared_key), modes.CBC(secrets.token_bytes(16)))
-        encryptor = cipher.encryptor()
+        # # Use the shared key for encryption
+        # cipher = Cipher(algorithms.AES(shared_key), modes.CBC(secrets.token_bytes(16)))
+        # encryptor = cipher.encryptor()
         
         # when the client first connecting to the server, the signup command will be send
         msg = self.protocol_msg_to_send("signup", "enter your name: ")
@@ -218,7 +218,7 @@ class Server:
                 
                 start_or_stop = not start_or_stop
             if (not msg == ""):
-                client_conn.send(encryptor.update(msg) + encryptor.finalize())
+                client_conn.send(msg)
 
     # def send_all (self,msg):
     #     self.
