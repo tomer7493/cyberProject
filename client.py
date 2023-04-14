@@ -140,7 +140,7 @@ class Client:
                 else:
                     name = input(data)
                     msg = self.protocol_msg_to_send("signup", name)
-                    self.sock.send(encrypt_data(msg,self.private_key))
+                    # self.sock.send(encrypt_data(msg,self.private_key))
             elif (cmd == "close client"):
 
                 self.close_client = True

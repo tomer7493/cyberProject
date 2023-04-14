@@ -168,7 +168,7 @@ class Server:
         
         # when the client first connecting to the server, the signup command will be send
         msg = self.protocol_msg_to_send("signup", "enter your name: ")
-        client_conn.send(msg)
+        client_conn.send(encrypt_data(msg))
         id = ""
         server_share = ""
         server_get_share_screen = ""
