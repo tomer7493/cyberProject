@@ -38,7 +38,6 @@
 # print(ssl.PROTOCOL_SSLv23)
 #server
 import socket
-import hashlib
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
 from Crypto.Random import get_random_bytes

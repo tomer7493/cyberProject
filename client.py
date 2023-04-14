@@ -13,29 +13,56 @@ from cryptography.hazmat.primitives.asymmetric import dh
 from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 import ssl
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad, unpad
+from Crypto.Random import get_random_bytes
+
+def dh_key_exchange(conn):
+    # Public parameters agreed by both client and server
+    p = 23
+    g = 5
+
+    # Generate private key
+    a = get_random_bytes(16)  # 16 bytes for AES-128
+    A = pow(g, int.from_bytes(a, byteorder='big'), p)
+
+    # Send public key to server
+    conn.send(A.to_bytes(256, byteorder='big'))
+
+    # Receive server's public key
+    B = int.from_bytes(conn.recv(256), byteorder='big')
+
+    # Compute shared secret key
+    s = pow(B, int.from_bytes(a, byteorder='big'), p)
+    s_bytes = s.to_bytes(16, byteorder='big')
+
+    return s_bytes
 
 
-# # Receive the server's public key and send the client's public key
-# def receive_public_key_and_send_public_key(conn):
-#     serialized_key = conn.recv(1024)
-#     server_public_key = serialization.load_pem_public_key(serialized_key)
-#     parameters = server_public_key.parameters()
-#     private_key = parameters.generate_private_key()
-#     public_key = private_key.public_key()
-#     serialized_key = public_key.public_bytes(
-#         encoding=serialization.Encoding.PEM,
-#         format=serialization.PublicFormat.SubjectPublicKeyInfo
-#     )
-#     conn.sendall(serialized_key)
-#     return private_key
-
-# context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-# context.load_verify_locations(cafile=r'cyberProject\keys_try\ca.crt')
+def encrypt_data(data, key):
+    iv = get_random_bytes(AES.block_size)
+    cipher = AES.new(key, AES.MODE_CBC, iv)
+    encrypted_data = iv + cipher.encrypt(pad(data.encode('utf-8'), AES.block_size))
+    return encrypted_data
 
 
+def receive_response(conn, key):
+    buffer_size = 1024
+    data = conn.recv(buffer_size)
+    decrypted_data = decrypt_data(data, key)
+    print(f'Received response: {decrypted_data}')
 
-# purpose = ssl.Purpose.SERVER_AUTH
-# context = ssl.create_default_context(purpose, cafile="cyberProject\keys_try\localhost.pem")
+
+def decrypt_data(data, key):
+    iv = data[:AES.block_size]
+    cipher = AES.new(key, AES.MODE_CBC, iv)
+    decrypted_data = unpad(cipher.decrypt(data[AES.block_size:]), AES.block_size)
+    return decrypted_data.decode('utf-8')
+
+def send_request(conn, key):
+    message = 'Hello from client!'
+    encrypted_message = encrypt_data(message, key)
+    conn.send(encrypted_message)
 
 class Client:
     def __init__(self, server_address=(socket.gethostbyname(socket.gethostname()), PORT)):
@@ -44,35 +71,25 @@ class Client:
         self.assignment_queue = queue.Queue()
         self.id = ""
         self.close_client = False
+        self.private_key = ""
         try:
             
             self.sock.connect(self.server_address)
             print(111)
-            # Set the SSL protocol version
-            # ssl_context  = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
-            # Create an SSL socket
-            # self.sock = ssl_context .wrap_socket(socket.socket(), server_hostname=str(self.server_address))
-            
-            # self.sock=context.wrap_socket(self.sock, server_hostname=str(self.server_address))
-            
             print("Connected to server from address", self.server_address)
-
         except Exception as e:
             print("There is a problem with connecting to server")
             print("server address:", self.server_address)
             print(e)
             exit(0)
+
+         # Perform Diffie-Hellman key exchange
+        self.private_key = dh_key_exchange(self.sock)
+
         self.handle_server()
 
     def recv_thread(self):
         
-        # # Securely exchange keys with the server
-        # private_key = receive_public_key_and_send_public_key(self.sock)
-        # shared_key = private_key.exchange(self.sock.server_public_key())
-
-        # # Use the shared key for decryption
-        # cipher = Cipher(algorithms.AES(shared_key), modes.CBC(secrets.token_bytes(16)))
-        # decryptor = cipher.decryptor()
         
         while (not self.close_client):
             raw_data = ""
@@ -86,7 +103,8 @@ class Client:
                     print("ERROR: client class - recv_thread method - receive cmd")
                 continue
             # The communication protocol- [cmd]@[data]
-            raw_data = raw_data.decode(FORMAT)
+            # raw_data = raw_data.decode(FORMAT)
+            raw_data = decrypt_data(raw_data,self.private_key)
             raw_data = raw_data.split("@")
 
             cmd = raw_data[0]
@@ -112,6 +130,7 @@ class Client:
         inAction = False
 
         while (not self.close_client):
+            msg = ""
             cmd, data = self.assignment_queue.get()
             print(cmd, 85274, data)
             if (cmd == "signup"):
@@ -121,7 +140,7 @@ class Client:
                 else:
                     name = input(data)
                     msg = self.protocol_msg_to_send("signup", name)
-                    self.sock.send(msg)
+                    self.sock.send(encrypt_data(msg,self.private_key))
             elif (cmd == "close client"):
 
                 self.close_client = True
@@ -158,7 +177,9 @@ class Client:
                     client_share.start_stream()
                     
                 inAction =not inAction
-                
+            if (msg != ""):
+                self.sock.send(encrypt_data(msg,self.private_key))
+
                 
     def protocol_msg_to_send(self, cmd, data):
         return f"{cmd}@{data}".encode(FORMAT)
