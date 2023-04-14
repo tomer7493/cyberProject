@@ -15,22 +15,24 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 import ssl
 
 
-# Receive the server's public key and send the client's public key
-def receive_public_key_and_send_public_key(conn):
-    serialized_key = conn.recv(1024)
-    server_public_key = serialization.load_pem_public_key(serialized_key)
-    parameters = server_public_key.parameters()
-    private_key = parameters.generate_private_key()
-    public_key = private_key.public_key()
-    serialized_key = public_key.public_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PublicFormat.SubjectPublicKeyInfo
-    )
-    conn.sendall(serialized_key)
-    return private_key
+# # Receive the server's public key and send the client's public key
+# def receive_public_key_and_send_public_key(conn):
+#     serialized_key = conn.recv(1024)
+#     server_public_key = serialization.load_pem_public_key(serialized_key)
+#     parameters = server_public_key.parameters()
+#     private_key = parameters.generate_private_key()
+#     public_key = private_key.public_key()
+#     serialized_key = public_key.public_bytes(
+#         encoding=serialization.Encoding.PEM,
+#         format=serialization.PublicFormat.SubjectPublicKeyInfo
+#     )
+#     conn.sendall(serialized_key)
+#     return private_key
 
-context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-context.load_verify_locations(cafile=r'cyberProject\server.crt')
+# context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+# context.load_verify_locations(cafile=r'cyberProject\keys_try\ca.crt')
+
+
 
 # purpose = ssl.Purpose.SERVER_AUTH
 # context = ssl.create_default_context(purpose, cafile="cyberProject\keys_try\localhost.pem")
@@ -46,11 +48,12 @@ class Client:
             
             self.sock.connect(self.server_address)
             print(111)
-            self.sock=context.wrap_socket(self.sock, server_hostname=str(self.server_address))
             # Set the SSL protocol version
-            ssl_context  = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+            # ssl_context  = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
             # Create an SSL socket
-            self.sock = ssl_context .wrap_socket(socket.socket(), server_hostname=str(self.server_address))
+            # self.sock = ssl_context .wrap_socket(socket.socket(), server_hostname=str(self.server_address))
+            
+            # self.sock=context.wrap_socket(self.sock, server_hostname=str(self.server_address))
             
             print("Connected to server from address", self.server_address)
 
@@ -63,19 +66,19 @@ class Client:
 
     def recv_thread(self):
         
-        # Securely exchange keys with the server
-        private_key = receive_public_key_and_send_public_key(self.sock)
-        shared_key = private_key.exchange(self.sock.server_public_key())
+        # # Securely exchange keys with the server
+        # private_key = receive_public_key_and_send_public_key(self.sock)
+        # shared_key = private_key.exchange(self.sock.server_public_key())
 
-        # Use the shared key for decryption
-        cipher = Cipher(algorithms.AES(shared_key), modes.CBC(secrets.token_bytes(16)))
-        decryptor = cipher.decryptor()
+        # # Use the shared key for decryption
+        # cipher = Cipher(algorithms.AES(shared_key), modes.CBC(secrets.token_bytes(16)))
+        # decryptor = cipher.decryptor()
         
         while (not self.close_client):
             raw_data = ""
             try:
                 raw_data = self.sock.recv(SIZE)
-                raw_data = decryptor.update(raw_data) + decryptor.finalize()
+                # raw_data = decryptor.update(raw_data) + decryptor.finalize()
             except:
                 if (self.close_client):
                     break
@@ -162,8 +165,8 @@ class Client:
 
 
 def main():
-    Client(("192.168.1.21",PORT))
-
+    # Client(("192.168.1.21",PORT))
+    Client()
 
 if __name__ == "__main__":
     main()

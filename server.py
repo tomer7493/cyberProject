@@ -18,38 +18,38 @@ from cryptography.hazmat.primitives.asymmetric import dh
 from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
-# Generate a new private-public key pair for the server
-parameters = dh.generate_parameters(generator=2, key_size=2048)
-private_key = parameters.generate_private_key()
-public_key = private_key.public_key()
+# # Generate a new private-public key pair for the server
+# parameters = dh.generate_parameters(generator=2, key_size=2048)
+# private_key = parameters.generate_private_key()
+# public_key = private_key.public_key()
 
-# Send the server's public key to the client
-def send_public_key(conn, public_key):
-    serialized_key = public_key.public_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PublicFormat.SubjectPublicKeyInfo
-    )
-    conn.sendall(serialized_key)
+# # Send the server's public key to the client
+# def send_public_key(conn, public_key):
+#     serialized_key = public_key.public_bytes(
+#         encoding=serialization.Encoding.PEM,
+#         format=serialization.PublicFormat.SubjectPublicKeyInfo
+#     )
+#     conn.sendall(serialized_key)
 
-# Receive the client's public key and derive a shared secret key
-def receive_public_key_and_derive_key(conn, private_key):
-    serialized_key = conn.recv(1024)
-    client_public_key = serialization.load_pem_public_key(serialized_key)
-    shared_key = private_key.exchange(client_public_key)
-    return shared_key
+# # Receive the client's public key and derive a shared secret key
+# def receive_public_key_and_derive_key(conn, private_key):
+#     serialized_key = conn.recv(1024)
+#     client_public_key = serialization.load_pem_public_key(serialized_key)
+#     shared_key = private_key.exchange(client_public_key)
+#     return shared_key
 
-context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-context.load_cert_chain(certfile=r"cyberProject\server.crt", keyfile=r"cyberProject\server.key")
-# purpose = ssl.Purpose.CLIENT_AUTH
-# context = ssl.create_default_context(purpose, cafile="cyberProject\keys_try\localhost.pem")
-# context.load_cert_chain("cyberProject\keys_try\ca.crt")
+# context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+# context.load_cert_chain(certfile=r"cyberProject\server.crt", keyfile=r"cyberProject\server.key")
+# # purpose = ssl.Purpose.CLIENT_AUTH
+# # context = ssl.create_default_context(purpose, cafile="cyberProject\keys_try\localhost.pem")
+# # context.load_cert_chain("cyberProject\keys_try\ca.crt")
 
 
 IP = socket.gethostbyname(socket.gethostname())
 
 ADDR = (IP, PORT)
 print(ADDR)
-ADDR = ("192.168.1.21", PORT)
+# ADDR = ("192.168.1.21", PORT)
 
 
 class Server:
@@ -80,14 +80,14 @@ class Server:
         while (True):  # this loop will be closed immediately when the server will shut down because off the try-except statement
             try:
                 client_conn, client_addr = self.server_socket.accept()
-                self.server_socket = context.wrap_socket(self.server_socket, server_side=True)
+                # self.server_socket = context.wrap_socket(self.server_socket, server_side=True)
                 
 
-                # Set the SSL protocol version
-                ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+                # # Set the SSL protocol version
+                # ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
 
-                # Create an SSL socket
-                self.server_socket = ssl_context.wrap_socket(socket.socket(), server_hostname=str(self.server_socket))
+                # # Create an SSL socket
+                # self.server_socket = ssl_context.wrap_socket(socket.socket(), server_hostname=str(self.server_socket))
 
             except OSError:  # If the ui is closed the server will shutdown
                 exit(0)
