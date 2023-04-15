@@ -113,8 +113,10 @@ class Client:
             raw_data = raw_data.split("@")
 
             cmd = raw_data[0]
-            data = raw_data[1]
-
+            try:
+                data = raw_data[1]
+            except:
+                data = ""
             self.assignment_queue.put((cmd, data))
 
     def handle_server(self):
