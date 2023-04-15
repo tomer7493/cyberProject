@@ -57,8 +57,8 @@ from Crypto.Random import get_random_bytes
 #     decrypted_data = cipher.decrypt(data[AES.block_size:])
 #     unpadded_data = unpad(decrypted_data, AES.block_size)
 #     return unpadded_data.decode('utf-8')
-certfile=r"cyberProject\try\localhost.pem"
-cafile = r"cyberProject\try\cacert.pem"
+certfile=r"try\localhost.pem"
+cafile = r"try\cacert.pem"
 purpose = ssl.Purpose.CLIENT_AUTH
 context = ssl.create_default_context(purpose, cafile=cafile)
 context.load_cert_chain(certfile)
@@ -67,9 +67,9 @@ IP = socket.gethostbyname(socket.gethostname())
 
 ADDR = (IP, PORT)
 print(ADDR)
-# ADDR = ("192.168.1.21", PORT)
+ADDR = ("192.168.1.21", PORT)
 
-ADDR = ("127.0.0.1", 18820)
+# ADDR = ("127.0.0.1", 18820)
 
 class Server:
     def __init__(self):
