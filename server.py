@@ -22,41 +22,7 @@ from Crypto.Util.Padding import pad, unpad
 from Crypto.Random import get_random_bytes
 
 
-# def encrypt_data(data, key):
-#     iv = get_random_bytes(AES.block_size)
-#     cipher = AES.new(key, AES.MODE_CBC, iv)
-#     padded_data = pad(data.encode('utf-8'), AES.block_size)
-#     encrypted_data = iv + cipher.encrypt(padded_data)
-#     return encrypted_data
 
-# def dh_key_exchange(conn):
-#     # Public parameters agreed by both client and server
-#     p = 23
-#     g = 5
-
-#     # Generate private key
-#     b = get_random_bytes(16)  # 16 bytes for AES-128
-#     B = pow(g, int.from_bytes(b, byteorder='big'), p)
-
-#     # Send public key to client
-#     conn.send(B.to_bytes(256, byteorder='big'))
-
-#     # Receive client's public key
-#     A = int.from_bytes(conn.recv(256), byteorder='big')
-
-#     # Compute shared secret key
-#     s = pow(A, int.from_bytes(b, byteorder='big'), p)
-#     s_bytes = s.to_bytes(16, byteorder='big')
-
-#     return s_bytes
-
-
-# def decrypt_data(data, key):
-#     iv = data[:AES.block_size]
-#     cipher = AES.new(key, AES.MODE_CBC, iv)
-#     decrypted_data = cipher.decrypt(data[AES.block_size:])
-#     unpadded_data = unpad(decrypted_data, AES.block_size)
-#     return unpadded_data.decode('utf-8')
 certfile=r"try\localhost.pem"
 cafile = r"try\cacert.pem"
 purpose = ssl.Purpose.CLIENT_AUTH
@@ -233,8 +199,15 @@ class Server:
                     server_get_share_screen.stop_server()
                 msg = self.protocol_msg_to_send(
                     "watchStudentScreenMet", str(10000))
-                
+               
                 start_or_stop = not start_or_stop
+            elif (cmd == "lock screen"):
+                msg = self.protocol_msg_to_send(
+                    "lock screen", "")
+            elif (cmd == "unlock screen"):
+                msg = self.protocol_msg_to_send(
+                    "unlock screen", "")
+            
             if (not msg == ""):
                 client_conn.send(msg.encode(FORMAT))
 

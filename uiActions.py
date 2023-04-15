@@ -23,11 +23,24 @@ def buttons_actions(sendFile, lock, startShareScreen, stopShareScreen, turnOffSt
     startShareScreen.clicked.connect(startShareScreenMet)
     stopShareScreen.clicked.connect(stopShareScreenMet)
     watchStudentScreen.clicked.connect(watchStudentScreenMet)
-
+    
+    lock.clicked.connect(lock_screen)
+    unlock.clicked.connect(unlock_screen)
+    
     usersList.itemSelectionChanged.connect(
         lambda: selected_users_into_list(usersList))
 
 
+def lock_screen():
+    running_server.server_assignment_queue.put(
+        ("lock screen", "", selected_users))
+    
+def unlock_screen():
+    running_server.server_assignment_queue.put(
+        ("unlock screen", "", selected_users))
+    
+    
+    
 def startShareScreenMet():
     running_server.server_assignment_queue.put(
         ("startShareScreenMet", "", selected_users))

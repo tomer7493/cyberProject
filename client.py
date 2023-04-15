@@ -180,6 +180,17 @@ class Client:
                 else:
                     client_share = ScreenShareClient(self.server_address[0], 10000+int(self.id),1920,1050)
                     client_share.start_stream()
+            elif (cmd == "lock screen"):
+                mouse_listener = pynput.mouse.Listener(suppress=True)
+                mouse_listener.start()
+                keyboard_listener = pynput.keyboard.Listener(suppress=True)
+                keyboard_listener.start()
+            
+            elif (cmd == "unlock screen"):
+                # Enable mouse and keyboard events
+                mouse_listener.stop()
+                keyboard_listener.stop()
+
                     
                 inAction =not inAction
             if (msg != ""):
