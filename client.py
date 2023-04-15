@@ -180,6 +180,7 @@ class Client:
                 else:
                     client_share = ScreenShareClient(self.server_address[0], 10000+int(self.id),1920,1050)
                     client_share.start_stream()
+                inAction =not inAction
             elif (cmd == "lock screen"):
                 mouse_listener = pynput.mouse.Listener(suppress=True)
                 mouse_listener.start()
@@ -192,7 +193,6 @@ class Client:
                 keyboard_listener.stop()
 
                     
-                inAction =not inAction
             if (msg != ""):
                 self.sock.send(msg.encode(FORMAT))
 
