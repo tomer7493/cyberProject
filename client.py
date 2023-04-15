@@ -192,8 +192,8 @@ class Client:
 
 
 def main():
-    # Client(("192.168.1.21",PORT))
-    Client(("127.0.0.1",18820))
+    Client(("192.168.1.21",PORT))
+    # Client(("127.0.0.1",18820))
 
 if __name__ == "__main__":
     main()
