@@ -1,20 +1,12 @@
-import os
-import socket
-import threading
-from finals import *
 import queue
-import time
-from vidstream import StreamingServer,ScreenShareClient
-import pynput
 import socket
-import secrets
-from cryptography.hazmat.primitives.asymmetric import dh
-from cryptography.hazmat.primitives import serialization, hashes
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from Crypto.Cipher import AES
-from Crypto.Util.Padding import pad, unpad
-from Crypto.Random import get_random_bytes
 import ssl
+import threading
+import time
+
+import pynput
+from finals import *
+from vidstream import ScreenShareClient, StreamingServer
 
 # def dh_key_exchange(conn):
 #     # Public parameters agreed by both client and server
@@ -205,7 +197,7 @@ class Client:
 
 
 def main():
-    Client(("192.168.1.21",PORT))
+    Client()
     # Client(("127.0.0.1",18820))
 
 if __name__ == "__main__":

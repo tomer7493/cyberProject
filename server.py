@@ -1,30 +1,19 @@
-import os
-import socket
-import threading
 import queue
-import threading
-import time
-from finals import *
-import uiFile
-import PyQt5.QtWidgets
-import sys
-import database
-import uiActions
-from vidstream import StreamingServer, ScreenShareClient
 import socket
 import ssl
-import secrets
-from cryptography.hazmat.primitives.asymmetric import dh
-from cryptography.hazmat.primitives import serialization, hashes
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from Crypto.Cipher import AES
-from Crypto.Util.Padding import pad, unpad
-from Crypto.Random import get_random_bytes
+import sys
+import threading
+import time
 
+import database
+import PyQt5.QtWidgets
+import uiActions
+import uiFile
+from finals import *
+from vidstream import ScreenShareClient, StreamingServer
 
-
-certfile=r"try\localhost.pem"
-cafile = r"try\cacert.pem"
+certfile=r"cyberProject\try\localhost.pem"
+cafile = r"cyberProject\try\cacert.pem"
 purpose = ssl.Purpose.CLIENT_AUTH
 context = ssl.create_default_context(purpose, cafile=cafile)
 context.load_cert_chain(certfile)
@@ -33,7 +22,7 @@ IP = socket.gethostbyname(socket.gethostname())
 
 ADDR = (IP, PORT)
 print(ADDR)
-ADDR = ("192.168.1.21", PORT)
+# ADDR = ("192.168.1.21", PORT)
 
 # ADDR = ("127.0.0.1", 18820)
 
