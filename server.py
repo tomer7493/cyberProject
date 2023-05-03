@@ -12,8 +12,8 @@ import uiFile
 from finals import *
 from vidstream import ScreenShareClient, StreamingServer
 
-certfile=r"keys\localhost.pem"
-cafile = r"keys\cacert.pem"
+certfile=r"cyberProject\keys\localhost.pem"
+cafile = r"cyberProject\keys\cacert.pem"
 purpose = ssl.Purpose.CLIENT_AUTH
 context = ssl.create_default_context(purpose, cafile=cafile)
 context.load_cert_chain(certfile)
