@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="logo">
+    <file>client_imgs/logo-removebg-preview.png</file>
+    <file>client_imgs/logo.png</file>
+  </qresource>
+</RCC>

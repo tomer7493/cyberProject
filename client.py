@@ -1,3 +1,6 @@
+import PyQt5
+import client_start
+import sys
 import queue
 import socket
 import ssl
@@ -8,54 +11,7 @@ import pynput
 from finals import *
 from vidstream import ScreenShareClient, StreamingServer
 
-# def dh_key_exchange(conn):
-#     # Public parameters agreed by both client and server
-#     p = 23
-#     g = 5
 
-#     # Generate private key
-#     a = get_random_bytes(16)  # 16 bytes for AES-128
-#     A = pow(g, int.from_bytes(a, byteorder='big'), p)
-
-#     # Send public key to server
-#     conn.send(A.to_bytes(256, byteorder='big'))
-
-#     # Receive server's public key
-#     B = int.from_bytes(conn.recv(256), byteorder='big')
-
-#     # Compute shared secret key
-#     s = pow(B, int.from_bytes(a, byteorder='big'), p)
-#     s_bytes = s.to_bytes(16, byteorder='big')
-
-#     return s_bytes
-
-
-# def encrypt_data(data, key):
-#     iv = get_random_bytes(AES.block_size)
-#     cipher = AES.new(key, AES.MODE_CBC, iv)
-#     padded_data = pad(data.encode('utf-8'), AES.block_size)
-#     encrypted_data = iv + cipher.encrypt(padded_data)
-#     return encrypted_data
-
-
-# def receive_response(conn, key):
-#     buffer_size = 1024
-#     data = conn.recv(buffer_size)
-#     decrypted_data = decrypt_data(data, key)
-#     print(f'Received response: {decrypted_data}')
-
-
-# def decrypt_data(data, key):
-#     iv = data[:AES.block_size]
-#     cipher = AES.new(key, AES.MODE_CBC, iv)
-#     decrypted_data = cipher.decrypt(data[AES.block_size:])
-#     unpadded_data = unpad(decrypted_data, AES.block_size)
-#     return unpadded_data.decode('utf-8')
-
-# def send_request(conn, key):
-#     message = 'Hello from client!'
-#     encrypted_message = encrypt_data(message, key)
-#     conn.send(encrypted_message)
 context = ssl.create_default_context()
 
 # Set the context to not verify the server's SSL/TLS certificate
@@ -63,14 +19,23 @@ context.check_hostname = False
 context.verify_mode = ssl.CERT_NONE
 class Client:
     def __init__(self, server_address=(socket.gethostbyname(socket.gethostname()), PORT)):
+        
+        
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_address = server_address
         self.assignment_queue = queue.Queue()
         self.id = ""
         self.close_client = False
         self.private_key = ""
+        self.is_ip_valid = False
         try:
-            
+            self.ui_thread = threading.Thread(target=self.start_open_screen)
+            self.ui_thread.start()
+        except:
+            print("closing ui")
+        while (not self.is_ip_valid):
+           pass
+        try:
             self.sock.connect(self.server_address)
             print(111)
             print("Connected to server from address", self.server_address)
@@ -80,8 +45,7 @@ class Client:
             print(e)
             exit(0)
 
-        #  # Perform Diffie-Hellman key exchange
-        # self.private_key = dh_key_exchange(self.sock)
+
         self.sock = context.wrap_socket(self.sock, server_hostname=server_address[0])
         self.handle_server()
 
@@ -92,7 +56,6 @@ class Client:
             raw_data = ""
             try:
                 raw_data = self.sock.recv(SIZE)
-                # raw_data = decryptor.update(raw_data) + decryptor.finalize()
             except:
                 if (self.close_client):
                     break
@@ -194,6 +157,31 @@ class Client:
     def protocol_msg_to_send(self, cmd, data):
         # return f"{cmd}@{data}".encode(FORMAT)
         return f"{cmd}@{data}"
+
+    def start_open_screen(self):
+        app = PyQt5.QtWidgets.QApplication(sys.argv)
+        ex = client_start.Ui_MainWindow()
+        w = PyQt5.QtWidgets.QMainWindow()
+        
+        
+        ex.setupUi(w,self)
+        
+        
+        w.show()
+        ex.done_button.clicked.connect(lambda: self.get_input(ex.ip_input,w))
+        app.exec()
+
+    def ui_input(self,ip_input,done_button):
+        done_button.clicked.connect(lambda: self.get_input(ip_input))
+
+    def get_input(self,ip_input,app):
+        self.server_address=(ip_input.text(),PORT)
+        self.is_ip_valid = True
+        print("done")
+        time.sleep(1)
+        app.close()
+        
+        # raise Exception("closing ui thread")
 
 
 def main():
