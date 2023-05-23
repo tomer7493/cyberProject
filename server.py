@@ -12,7 +12,7 @@ import uiFile
 from finals import *
 from vidstream import ScreenShareClient, StreamingServer
 
-certfile=r"cyberProject\keys\localhost.pem"
+certfile = r"cyberProject\keys\localhost.pem"
 cafile = r"cyberProject\keys\cacert.pem"
 purpose = ssl.Purpose.CLIENT_AUTH
 context = ssl.create_default_context(purpose, cafile=cafile)
@@ -26,24 +26,21 @@ print(ADDR)
 
 # ADDR = ("127.0.0.1", 18820)
 
+
 class Server:
-    def __init__(self):
+    def __init__(self, localhost_ip=socket.gethostbyname(socket.gethostname()), localhost_port=PORT):
         # [0]- cmd , [1]-data, [2]-clients that should get the assignment
         self.server_assignment_queue = queue.Queue()
         print("Server is starting")
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.server_socket.bind(ADDR)
+        self.server_socket.setsockopt(
+            socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.server_socket.bind((localhost_ip, localhost_port))
         self.server_socket.listen()
-        self.unregistered_users_list = {}
         self.queue_for_client_dict = {}
         self.database = database.users_db("users_database.db")
         self.connected_users = 0
-        # self.server_get_share_screen = StreamingServer(ADDR[0], 10000).start_server()
-        self.first_run = True
 
-        self.private_key = ""
-        
         global shutdown
         shutdown = False
         print(f"Server is listening on {ADDR}.")
@@ -57,10 +54,10 @@ class Server:
         while (True):  # this loop will be closed immediately when the server will shut down because off the try-except statement
             try:
                 client_conn, client_addr = self.server_socket.accept()
-                 # Perform Diffie-Hellman key exchange
-                # self.private_key = dh_key_exchange(client_conn)
-                client_conn = context.wrap_socket(client_conn, server_side=True)
-                
+                # tcp - tls secure connection
+                client_conn = context.wrap_socket(
+                    client_conn, server_side=True)
+
             except OSError:  # If the ui is closed the server will shutdown
                 exit(0)
             handle_client_thread = threading.Thread(
@@ -92,7 +89,6 @@ class Server:
                         user_addr)
                     current_user_queue.put((cmd, data))
             if (cmd == "close server"):
-                # time.sleep(10)
                 self.server_socket.close()
 
     def recv_from_client(self, client_conn, client_address):
@@ -106,61 +102,35 @@ class Server:
                 else:
                     print("ERROR: client class - recv_thread method - receive cmd")
             # The communication protocol- [cmd]@[data]
-            # raw_data = raw_data.decode(FORMAT)
             data = raw_data.decode(FORMAT)
             data = data.split("@")
 
             cmd = data[0]
             data = data[1]
-           # if (cmd=="signup"):
 
             self.server_assignment_queue.put((cmd, data, (client_address,)))
 
     def send_to_client(self, client_conn, client_addr, assignment_queue):
-        
-        # # Securely exchange keys with the client
-        # send_public_key(client_conn, public_key)
-        # shared_key = receive_public_key_and_derive_key(client_conn, private_key)
-        
-        # # Use the shared key for encryption
-        # cipher = Cipher(algorithms.AES(shared_key), modes.CBC(secrets.token_bytes(16)))
-        # encryptor = cipher.encryptor()
-        
-        # when the client first connecting to the server, the signup command will be send
+
         msg = self.protocol_msg_to_send("signup", "enter your name: ")
         client_conn.send(msg.encode(FORMAT))
         id = ""
         server_share = ""
         server_get_share_screen = ""
-        inAction = False
-        if self.first_run:
-            # server_get_share_screen = StreamingServer(ADDR[0], 10000).start_server()
-            print(client_addr,88888888888888888888888)
-            self.first_run = False
-        share_screen_first_run = True
+
         start_or_stop = True
         while (not shutdown):
             msg = ""
-            # # checks if the this client is the last one the should get the assignment
-            # users_selected_list = assignment_queue.queue[0][2]
-            # if (len(users_selected_list) == 1):
-            #     cmd, data, tmp = assignment_queue.get()
-            # else:
-            #     cmd, data, tmp = assignment_queue.queue[0]
-
             cmd, data = assignment_queue.get()
-
             print(cmd, 121212, data)
-            # seeing which user is selected
-            # for x in data:
-            #    print(333,x.text())
 
             if (cmd == "signup"):
                 self.database.add_client(
                     data, client_addr[0], client_addr[1], "TODO")
                 uiActions.add_user_to_list(data)
                 id = self.database.get_user_by_single_info(data, 1)[0]
-                msg = self.protocol_msg_to_send(cmd, f"registration successful#{id}")
+                msg = self.protocol_msg_to_send(
+                    cmd, f"registration successful#{id}")
 
             elif (cmd == "close server"):
                 msg = self.protocol_msg_to_send("close client", "")
@@ -168,8 +138,9 @@ class Server:
 
             elif (cmd == "startShareScreenMet"):
                 server_share = ScreenShareClient(
-                    client_addr[0], 10000+id,1920,1050)
-                msg = self.protocol_msg_to_send("startShareScreenMet", str(10000+id))
+                    client_addr[0], 10000+id, 1920, 1050)
+                msg = self.protocol_msg_to_send(
+                    "startShareScreenMet", str(10000+id))
                 # inAction = True
                 server_share.start_stream()
 
@@ -178,17 +149,18 @@ class Server:
                 # inAction = False
                 time.sleep(0.5)
                 server_share.stop_stream()
-                
+
             elif (cmd == "watchStudentScreenMet"):
-                if start_or_stop:    
+                if start_or_stop:
                     print(client_addr[0], "hahahhahahha")
-                    server_get_share_screen = StreamingServer(ADDR[0], 10000+id)
-                    server_get_share_screen.start_server() 
+                    server_get_share_screen = StreamingServer(
+                        ADDR[0], 10000+id)
+                    server_get_share_screen.start_server()
                 else:
                     server_get_share_screen.stop_server()
                 msg = self.protocol_msg_to_send(
                     "watchStudentScreenMet", str(10000))
-               
+
                 start_or_stop = not start_or_stop
             elif (cmd == "lock screen"):
                 msg = self.protocol_msg_to_send(
@@ -196,7 +168,7 @@ class Server:
             elif (cmd == "unlock screen"):
                 msg = self.protocol_msg_to_send(
                     "unlock screen", "")
-            
+
             if (not msg == ""):
                 client_conn.send(msg.encode(FORMAT))
 
@@ -206,6 +178,7 @@ class Server:
     def protocol_msg_to_send(self, cmd, data):
         # return f"{cmd}@{data}".encode(FORMAT)
         return f"{cmd}@{data}"
+
     def uiRunner(self):
         # You need one (and only one) QApplication instance per application.
         # Pass in sys.argv to allow command line arguments for your app.
