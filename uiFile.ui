@@ -71,9 +71,6 @@
        <property name="text">
         <string>select all users</string>
        </property>
-       <property name="checked">
-        <bool>false</bool>
-       </property>
       </widget>
      </item>
     </layout>
@@ -81,10 +78,10 @@
    <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>-11</x>
+      <x>-1</x>
       <y>-1</y>
-      <width>811</width>
-      <height>371</height>
+      <width>801</width>
+      <height>301</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">

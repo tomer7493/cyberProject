@@ -13,7 +13,7 @@ selected_users = []
 global all_users
 
 
-def buttons_actions( lock, startShareScreen, stopShareScreen,   unlock, watchStudentScreen, selectAllUsers, usersList, server):
+def buttons_actions(lock, startShareScreen, stopShareScreen,   unlock, watchStudentScreen, selectAllUsers, usersList, server):
     global running_server
     running_server = server
 
@@ -23,12 +23,12 @@ def buttons_actions( lock, startShareScreen, stopShareScreen,   unlock, watchStu
     startShareScreen.clicked.connect(startShareScreenMet)
     stopShareScreen.clicked.connect(stopShareScreenMet)
     watchStudentScreen.clicked.connect(watchStudentScreenMet)
-    
+
     lock.clicked.connect(lock_screen)
     unlock.clicked.connect(unlock_screen)
-    
-    selectAllUsers..clicked.connect(select_all_users)
-    
+
+    selectAllUsers.clicked.connect(select_all_users)
+
     usersList.itemSelectionChanged.connect(
         lambda: selected_users_into_list(usersList))
 
@@ -36,14 +36,17 @@ def buttons_actions( lock, startShareScreen, stopShareScreen,   unlock, watchStu
 def lock_screen():
     running_server.server_assignment_queue.put(
         ("lock screen", "", selected_users))
-    
+
+
 def unlock_screen():
     running_server.server_assignment_queue.put(
         ("unlock screen", "", selected_users))
-    
+
+
 def select_all_users():
     pass
-    
+
+
 def startShareScreenMet():
     running_server.server_assignment_queue.put(
         ("startShareScreenMet", "", selected_users))

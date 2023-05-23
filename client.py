@@ -9,7 +9,7 @@ import time
 import pynput
 from finals import *
 from vidstream import ScreenShareClient, StreamingServer
-
+import client_name
 
 context = ssl.create_default_context()
 
@@ -28,12 +28,15 @@ class Client:
         self.close_client = False
         self.private_key = ""
         self.is_ip_valid = False
+        self.is_name_valid = False
+        self.name = ""
+
         try:
             self.ui_thread = threading.Thread(target=self.start_open_screen)
             self.ui_thread.start()
         except:
             print("closing ui")
-        while (not self.is_ip_valid):
+        while (not self.is_ip_valid ):
             pass
         try:
             self.sock.connect(self.server_address)
@@ -95,8 +98,12 @@ class Client:
                     print(data)
                     self.id = data.split("#")[1]
                 else:
-                    name = input(data)
-                    msg = self.protocol_msg_to_send("signup", name)
+                    # name = input(data)
+                    self.ui_thread = threading.Thread(target=self.client_name_screen)
+                    self.ui_thread.start()
+                    while(not self.is_name_valid):
+                        pass
+                    msg = self.protocol_msg_to_send("signup", self.name)
             elif (cmd == "close client"):
 
                 self.close_client = True
@@ -159,16 +166,33 @@ class Client:
         ex.done_button.clicked.connect(lambda: self.get_input(ex.ip_input, w))
         app.exec()
 
-    def ui_input(self, ip_input, done_button):
-        done_button.clicked.connect(lambda: self.get_input(ip_input))
+    def client_name_screen(self):
+        app = PyQt5.QtWidgets.QApplication(sys.argv)
+        ex = client_name.Ui_MainWindow()
+        w = PyQt5.QtWidgets.QMainWindow()
+
+        ex.setupUi(w, self)
+
+        w.show()
+        ex.done_button.clicked.connect(lambda: self.get_input_name(ex.ip_input, w))
+        app.exec()
+
+    # def ui_input(self, ip_input, done_button):
+    #     done_button.clicked.connect(lambda: self.get_input(ip_input))
 
     def get_input(self, ip_input, app):
         self.server_address = (ip_input.text(), PORT)
         self.is_ip_valid = True
         print("done")
-        time.sleep(1)
+        # time.sleep(1)
         app.close()
-
+    
+    def get_input_name(self, ip_input, app):
+        self.name = ip_input.text()
+        self.is_name_valid = True
+        print("done")
+        # time.sleep(1)
+        app.close()
         # raise Exception("closing ui thread")
 
 
