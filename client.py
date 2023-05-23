@@ -6,7 +6,6 @@ import socket
 import ssl
 import threading
 import time
-import winreg
 import pynput
 from finals import *
 from vidstream import ScreenShareClient, StreamingServer
@@ -45,28 +44,12 @@ class Client:
             print("server address:", self.server_address)
             print(e)
             exit(0)
-        
+
         self.sock = context.wrap_socket(
             self.sock, server_hostname=server_address[0])
-        self.disable_task_manager(1)
-        self.handle_server()
 
-    def disable_task_manager(value: int):
-        """enter 1 for disabling the task manager
-            and enter 0 for enabling the task manager"""
-        # Path to the explorer properties
-        registry_path: str = r"SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
-        # Name of the key
-        registry_name: str = "DisableTaskMgr"
-        # Value that the registry key is set to
-        value: int = 1
-        try:
-            reg_key = winreg.OpenKey(
-                winreg.HKEY_CURRENT_USER, registry_path, 0, winreg.KEY_SET_VALUE)
-            winreg.SetValueEx(reg_key, registry_name, 0, winreg.REG_SZ, value)
-            winreg.CloseKey(reg_key)
-        except WindowsError as e:
-            print(f"There was an error setting the registry key {e}")
+        self.handle_server()
+   
 
     def recv_thread(self):
 
@@ -81,7 +64,6 @@ class Client:
                     print("ERROR: client class - recv_thread method - receive cmd")
                 continue
             # The communication protocol- [cmd]@[data]
-            # raw_data = raw_data.decode(FORMAT)
             raw_data = raw_data.decode(FORMAT)
             raw_data = raw_data.split("@")
 
@@ -99,9 +81,6 @@ class Client:
 
         client_get = ""
 
-        share_screen_first_run = True
-        get_screen_first_run = True
-
         client_share = ""
 
         print(self.server_address[0], 11111111111111111111)
@@ -118,21 +97,16 @@ class Client:
                 else:
                     name = input(data)
                     msg = self.protocol_msg_to_send("signup", name)
-                    # self.sock.send(encrypt_data(msg,self.private_key))
             elif (cmd == "close client"):
 
                 self.close_client = True
                 self.sock.close()
                 break
             elif (cmd == "startShareScreenMet"):
-                # if (get_screen_first_run):
-                # socket.gethostbyname(socket.gethostname())
                 print(socket.gethostbyname(socket.gethostname()),
                       int(data), "hahahhahahahah")
                 client_get = StreamingServer(
                     socket.gethostbyname(socket.gethostname()), int(data))
-                get_screen_first_run = False
-                # inAction = True
                 client_get.start_server()
                 mouse_listener = pynput.mouse.Listener(suppress=True)
                 mouse_listener.start()
@@ -140,8 +114,7 @@ class Client:
                 keyboard_listener.start()
 
             elif (cmd == "stopShareScreenMet"):
-                # inAction = False
-
+        
                 client_get.stop_server()
                 # Enable mouse and keyboard events
                 mouse_listener.stop()
@@ -152,7 +125,6 @@ class Client:
                     print("noooooooooooooooo")
                     time.sleep(0.5)
                     client_share.stop_stream()
-                    # client_share._cleanup()
                 else:
                     client_share = ScreenShareClient(
                         self.server_address[0], 10000+int(self.id), 1920, 1050)
