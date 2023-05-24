@@ -64,6 +64,10 @@ def watchStudentScreenMet():
         ("watchStudentScreenMet", "", selected_users))
     print(1113)
 
+def add_user_to_list(username: str):
+    all_users.addItem(username)
+
+
 
 def selected_users_into_list(users_list):
     global selected_users
