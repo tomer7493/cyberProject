@@ -37,7 +37,7 @@ class Server:
             socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server_socket.bind((localhost_ip, localhost_port))
         self.server_socket.listen()
-        self.queue_for_client_dict = {}
+        self.clients_dict = {}
         self.database = database.users_db("users_database.db")
         self.connected_users = 0
 
@@ -51,12 +51,13 @@ class Server:
             target=self.handle_server_assignment)
         handle_server_asg_thread.start()
 
-        while (True):  # this loop will be closed immediately when the server will shut down because off the try-except statement
+        while (self.connected_users < 100):  # this loop will be closed immediately when the server will shut down because off the try-except statement
             try:
                 client_conn, client_addr = self.server_socket.accept()
                 # tcp - tls secure connection
                 client_conn = context.wrap_socket(
                     client_conn, server_side=True)
+                self.connected_users += 1
 
             except OSError:  # If the ui is closed the server will shutdown
                 exit(0)
@@ -68,7 +69,7 @@ class Server:
         print(f"{client_addr} connected.")
 
         client_assignment_queue = queue.Queue()
-        self.queue_for_client_dict.update(
+        self.clients_dict.update(
             {client_addr: client_assignment_queue})
 
         recv_thread = threading.Thread(
@@ -78,14 +79,13 @@ class Server:
         send_to_client_thread = threading.Thread(
             target=self.send_to_client, args=(client_conn, client_addr, client_assignment_queue))
         send_to_client_thread.start()
-        self.connected_users += 1
 
     def handle_server_assignment(self):
         while (not shutdown):
             cmd, data, users_addr = self.server_assignment_queue.get()
             for user_addr in users_addr:
                 if (not user_addr == []):  # ????????????????
-                    current_user_queue = self.queue_for_client_dict.get(
+                    current_user_queue = self.clients_dict.get(
                         user_addr)
                     current_user_queue.put((cmd, data))
             if (cmd == "close server"):

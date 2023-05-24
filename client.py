@@ -26,7 +26,6 @@ class Client:
         self.assignment_queue = queue.Queue()
         self.id = ""
         self.close_client = False
-        self.private_key = ""
         self.is_ip_valid = False
         self.is_name_valid = False
         self.name = ""
