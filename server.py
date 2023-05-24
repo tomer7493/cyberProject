@@ -12,8 +12,8 @@ import uiFile
 from finals import *
 from vidstream import ScreenShareClient, StreamingServer
 
-certfile = r"cyberProject\keys\localhost.pem"
-cafile = r"cyberProject\keys\cacert.pem"
+certfile = r"keys\localhost.pem"
+cafile = r"keys\cacert.pem"
 purpose = ssl.Purpose.CLIENT_AUTH
 context = ssl.create_default_context(purpose, cafile=cafile)
 context.load_cert_chain(certfile)
@@ -112,7 +112,7 @@ class Server:
 
     def send_to_client(self, client_conn, client_addr, assignment_queue):
 
-        msg = self.protocol_msg_to_send("signup", "enter your name: ")
+        msg = self.protocol_msg_to_send("signup", " ")
         client_conn.send(msg.encode(FORMAT))
         id = ""
         server_share = ""

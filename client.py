@@ -51,10 +51,13 @@ class Client:
         self.sock = context.wrap_socket(
             self.sock, server_hostname=server_address[0])
 
+        receive_thread = threading.Thread(target=self.recv_from_server)
+        receive_thread.start()
+
         self.handle_server()
    
 
-    def recv_thread(self):
+    def recv_from_server(self):
 
         while (not self.close_client):
             raw_data = ""
@@ -64,7 +67,7 @@ class Client:
                 if (self.close_client):
                     break
                 else:
-                    print("ERROR: client class - recv_thread method - receive cmd")
+                    print("ERROR: client class - recv_from_server method - receive cmd")
                 continue
             # The communication protocol- [cmd]@[data]
             raw_data = raw_data.decode(FORMAT)
@@ -78,10 +81,6 @@ class Client:
             self.assignment_queue.put((cmd, data))
 
     def handle_server(self):
-
-        receive_thread = threading.Thread(target=self.recv_thread)
-        receive_thread.start()
-
         client_get = ""
 
         client_share = ""
@@ -170,7 +169,7 @@ class Client:
         app = PyQt5.QtWidgets.QApplication(sys.argv)
         ex = client_name.Ui_MainWindow()
         w = PyQt5.QtWidgets.QMainWindow()
-
+        
         ex.setupUi(w, self)
 
         w.show()
@@ -187,13 +186,14 @@ class Client:
         # time.sleep(1)
         app.close()
     
-    def get_input_name(self, ip_input, app):
-        self.name = ip_input.text()
-        self.is_name_valid = True
+    def get_input_name(self, name_input, app):
+        self.name = name_input.text()
+        if (self.name.isalpha()):
+            self.is_name_valid = True
+            app.close()
+        
+        
         print("done")
-        # time.sleep(1)
-        app.close()
-        # raise Exception("closing ui thread")
 
 
 def main():

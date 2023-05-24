@@ -17,6 +17,8 @@ class users_db:
         conn.close()
 
     def add_client(self, client_name, ip_addr, port_addr, mac_addr):
+        if ("'" in (client_name or ip_addr or port_addr or mac_addr)):
+            return False
         conn = sqlite3.connect(self.path)
         str_insert = f"INSERT INTO {self.tablename} ({self.col_client_name},{self.col_ip_addr},{self.col_port_addr},{self.col_mac_addr}) VALUES ('{client_name}','{ip_addr}','{port_addr}','{mac_addr}')"
         try:

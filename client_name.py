@@ -32,7 +32,7 @@ class Ui_MainWindow(object):
         self.ip_input.setMaxLength(20)
         self.ip_input.setObjectName("ip_input")
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
-        self.label_2.setGeometry(QtCore.QRect(190, 320, 371, 41))
+        self.label_2.setGeometry(QtCore.QRect(80, 300, 531, 61))
         font = QtGui.QFont()
         font.setPointSize(20)
         self.label_2.setFont(font)
@@ -60,5 +60,5 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.label_2.setText(_translate("MainWindow", "enter your name:"))
+        self.label_2.setText(_translate("MainWindow", "enter your name (use only alphabetic letters):"))
         self.done_button.setText(_translate("MainWindow", "done"))
