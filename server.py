@@ -21,10 +21,9 @@ context.load_cert_chain(certfile)
 IP = socket.gethostbyname(socket.gethostname())
 
 ADDR = (IP, PORT)
-print(ADDR)
 # ADDR = ("192.168.1.21", PORT)
 
-# ADDR = ("127.0.0.1", 18820)
+
 
 
 class Server:
@@ -84,7 +83,7 @@ class Server:
         while (not shutdown):
             cmd, data, users_addr = self.server_assignment_queue.get()
             for user_addr in users_addr:
-                if (not user_addr == []):  # ????????????????
+                if (not user_addr == []):
                     current_user_queue = self.clients_dict.get(
                         user_addr)
                     current_user_queue.put((cmd, data))
@@ -122,7 +121,6 @@ class Server:
         while (not shutdown):
             msg = ""
             cmd, data = assignment_queue.get()
-            print(cmd, 121212, data)
 
             if (cmd == "signup"):
                 self.database.add_client(
@@ -152,7 +150,6 @@ class Server:
 
             elif (cmd == "watchStudentScreenMet"):
                 if start_or_stop:
-                    print(client_addr[0], "hahahhahahha")
                     server_get_share_screen = StreamingServer(
                         ADDR[0], 10000+id)
                     server_get_share_screen.start_server()
