@@ -123,6 +123,7 @@ class Server:
             cmd, data = assignment_queue.get()
 
             if (cmd == "signup"):
+                
                 self.database.add_client(
                     data, client_addr[0], client_addr[1], "TODO")
                 uiActions.add_user_to_list(data)

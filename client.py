@@ -77,7 +77,7 @@ class Client:
             except:
                 data = ""
             self.assignment_queue.put((cmd, data))
-
+    
     def handle_server(self):
         client_get = ""
 
