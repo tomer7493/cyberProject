@@ -1,8 +1,4 @@
-import uiFile
-import PyQt5
-import sys
 from PyQt5.QtWidgets import *
-from PyQt5 import QtCore, QtGui
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 import sys
@@ -50,19 +46,16 @@ def select_all_users():
 def startShareScreenMet():
     running_server.server_assignment_queue.put(
         ("startShareScreenMet", "", selected_users))
-    print(1111)
 
 
 def stopShareScreenMet():
     running_server.server_assignment_queue.put(
         ("stopShareScreenMet", "", selected_users))
-    print(1112)
 
 
 def watchStudentScreenMet():
     running_server.server_assignment_queue.put(
         ("watchStudentScreenMet", "", selected_users))
-    print(1113)
 
 def add_user_to_list(username: str):
     all_users.addItem(username)

@@ -39,7 +39,6 @@ class Client:
             pass
         try:
             self.sock.connect(self.server_address)
-            print(111)
             print("Connected to server from address", self.server_address)
         except Exception as e:
             print("There is a problem with connecting to server")
@@ -78,22 +77,19 @@ class Client:
             except:
                 data = ""
             self.assignment_queue.put((cmd, data))
-
+    
     def handle_server(self):
         client_get = ""
 
         client_share = ""
 
-        print(self.server_address[0], 11111111111111111111)
         inAction = False
 
         while (not self.close_client):
             msg = ""
             cmd, data = self.assignment_queue.get()
-            print(cmd, 85274, data)
             if (cmd == "signup"):
                 if (data.split("#")[0] == "registration successful"):
-                    print(data)
                     self.id = data.split("#")[1]
                 else:
                     # name = input(data)
@@ -108,8 +104,6 @@ class Client:
                 self.sock.close()
                 break
             elif (cmd == "startShareScreenMet"):
-                print(socket.gethostbyname(socket.gethostname()),
-                      int(data), "hahahhahahahah")
                 client_get = StreamingServer(
                     socket.gethostbyname(socket.gethostname()), int(data))
                 client_get.start_server()
@@ -127,7 +121,6 @@ class Client:
 
             elif (cmd == "watchStudentScreenMet"):
                 if (inAction):
-                    print("noooooooooooooooo")
                     time.sleep(0.5)
                     client_share.stop_stream()
                 else:
@@ -181,7 +174,6 @@ class Client:
     def get_input(self, ip_input, app):
         self.server_address = (ip_input.text(), PORT)
         self.is_ip_valid = True
-        print("done")
         # time.sleep(1)
         app.close()
     
@@ -191,9 +183,6 @@ class Client:
             self.is_name_valid = True
             app.close()
         
-        
-        print("done")
-
 
 def main():
     Client()
