@@ -177,6 +177,8 @@ class StreamingServer:
             frame = cv2.imdecode(frame, cv2.IMREAD_COLOR)
             cv2.imshow(str(address), frame)
             cv2.moveWindow(str(address),0,0)###########
+            cv2.setWindowProperty(str(address), cv2.WND_PROP_TOPMOST, 1)###########
+
             
             if cv2.waitKey(1) == ord(self.__quit_key):
                 connection.close()
