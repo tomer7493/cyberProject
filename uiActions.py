@@ -50,6 +50,9 @@ def unlock_screen():
 def select_all_users():
     global is_all_users_selected
     is_all_users_selected = not is_all_users_selected
+    if (is_all_users_selected):
+        all_users_into_list(all_users)
+
     print("working!!!")
 
 
@@ -84,8 +87,6 @@ def selected_users_into_list(users_list):
                 user_name = users_list.item(user_num).text()
                 user_addr = running_server.database.get_user_by_single_info(user_name, 1)
                 selected_users.append((user_addr[2], user_addr[3]))
-    else:
-        all_users_into_list(users_list)
 
 def all_users_into_list(users_list):
     global selected_users
