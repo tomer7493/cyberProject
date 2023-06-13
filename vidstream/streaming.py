@@ -304,8 +304,8 @@ class StreamingClient:
         """
         if self.__running:
             self.__running = False
-        else:
-            print("Client not streaming!")
+        
+            
 
 
 class CameraClient(StreamingClient):
