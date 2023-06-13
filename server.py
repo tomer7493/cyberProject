@@ -116,56 +116,63 @@ class Server:
         id = ""
         server_share = ""
         server_get_share_screen = ""
-
+        is_action = False
+        
         start_or_stop = True
         while (not shutdown):
             msg = ""
             cmd, data = assignment_queue.get()
 
-            if (cmd == "signup"):
-                
-                self.database.add_client(
-                    data, client_addr[0], client_addr[1], "TODO")
-                uiActions.add_user_to_list(data)
-                id = self.database.get_user_by_single_info(data, 1)[0]
-                msg = self.protocol_msg_to_send(
-                    cmd, f"registration successful#{id}")
+            if is_action == False:
+                if (cmd == "signup"):
 
-            elif (cmd == "close server"):
-                msg = self.protocol_msg_to_send("close client", "")
-                break
+                    self.database.add_client(
+                        data, client_addr[0], client_addr[1], "TODO")
+                    uiActions.add_user_to_list(data)
+                    id = self.database.get_user_by_single_info(data, 1)[0]
+                    msg = self.protocol_msg_to_send(
+                        cmd, f"registration successful#{id}")
 
-            elif (cmd == "startShareScreenMet"):
-                server_share = ScreenShareClient(
-                    client_addr[0], 10000+id, 1920, 1050)
-                msg = self.protocol_msg_to_send(
-                    "startShareScreenMet", str(10000+id))
-                # inAction = True
-                server_share.start_stream()
+                elif (cmd == "close server"):
+                    msg = self.protocol_msg_to_send("close client", "")
+                    break
 
-            elif (cmd == "stopShareScreenMet"):
-                msg = self.protocol_msg_to_send("stopShareScreenMet", "")
-                # inAction = False
-                time.sleep(0.5)
-                server_share.stop_stream()
+                elif (cmd == "startShareScreenMet"):
+                    is_action = True
+                    server_share = ScreenShareClient(
+                        client_addr[0], 10000+id, 1920, 1050)
+                    msg = self.protocol_msg_to_send(
+                        "startShareScreenMet", str(10000+id))
+                    # inAction = True
+                    server_share.start_stream()
 
-            elif (cmd == "watchStudentScreenMet"):
-                if start_or_stop:
-                    server_get_share_screen = StreamingServer(
-                        ADDR[0], 10000+id)
-                    server_get_share_screen.start_server()
-                else:
-                    server_get_share_screen.stop_server()
-                msg = self.protocol_msg_to_send(
-                    "watchStudentScreenMet", str(10000))
+                elif (cmd == "stopShareScreenMet"):
+                    is_action = False
+                    msg = self.protocol_msg_to_send("stopShareScreenMet", "")
+                    # inAction = False
+                    time.sleep(0.5)
+                    server_share.stop_stream()
 
-                start_or_stop = not start_or_stop
-            elif (cmd == "lock screen"):
-                msg = self.protocol_msg_to_send(
-                    "lock screen", "")
-            elif (cmd == "unlock screen"):
-                msg = self.protocol_msg_to_send(
-                    "unlock screen", "")
+                elif (cmd == "watchStudentScreenMet"):
+                    is_action = start_or_stop
+                    if start_or_stop:
+                        server_get_share_screen = StreamingServer(
+                            ADDR[0], 10000+id)
+                        server_get_share_screen.start_server()
+                    else:
+                        server_get_share_screen.stop_server()
+                    msg = self.protocol_msg_to_send(
+                        "watchStudentScreenMet", str(10000))
+
+                    start_or_stop = not start_or_stop
+                elif (cmd == "lock screen"):
+                    is_action = True
+                    msg = self.protocol_msg_to_send(
+                        "lock screen", "")
+                elif (cmd == "unlock screen"):
+                    is_action = False
+                    msg = self.protocol_msg_to_send(
+                        "unlock screen", "")
 
             if (not msg == ""):
                 client_conn.send(msg.encode(FORMAT))
