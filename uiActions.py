@@ -79,9 +79,9 @@ def add_user_to_list(username: str):
 
 
 def selected_users_into_list(users_list):
-    global selected_users
-    selected_users = []
     if not is_all_users_selected:
+        global selected_users
+        selected_users = []
         for user_num in range(users_list.count()):
             if users_list.item(user_num).isSelected():
                 user_name = users_list.item(user_num).text()
