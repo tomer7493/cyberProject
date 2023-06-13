@@ -91,4 +91,6 @@ def all_users_into_list(users_list):
     global selected_users
     selected_users = []
     for user_num in range(users_list.count()):
-        selected_users.append(users_list.item(user_num))
+        user_name = users_list.item(user_num).text()
+        user_addr = running_server.database.get_user_by_single_info(user_name, 1)
+        selected_users.append((user_addr[2], user_addr[3]))
