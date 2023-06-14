@@ -101,12 +101,14 @@ class Server:
                 else:
                     print("ERROR: client class - recv_thread method - receive cmd")
             # The communication protocol- [cmd]@[data]
-            data = raw_data.decode(FORMAT)
-            data = data.split("@")
+            try:
+                data = raw_data.decode(FORMAT)
+                data = data.split("@")
 
-            cmd = data[0]
-            data = data[1]
-
+                cmd = data[0]
+                data = data[1]
+            except:
+                pass
             self.server_assignment_queue.put((cmd, data, (client_address,)))
 
     def send_to_client(self, client_conn, client_addr, assignment_queue):
